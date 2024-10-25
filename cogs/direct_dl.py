@@ -1,4 +1,5 @@
 import urllib.parse
+import requests
 import discord
 import yt_dlp
 import os
@@ -102,6 +103,18 @@ class DirectDLCog(commands.Cog):
 
             except Exception as e:
                 print(f"Error processing TikTok video: {str(e)}")
+
+    @commands.command(name="mdl", description="upload music to music server")
+    async def start_download(ctx, url):
+        response = requests.get(f"http://192.168.1.238:42069/start_download", params={'url': url})
+
+        if response.status_code == 200:
+            result = response.json()
+            await ctx.send(f"Download started successfully: {result.get('message', 'No message')}")
+        else:
+            error = response.json().get('error', 'Unknown error occurred.')
+            await ctx.send(f"Error: {error}")
+
 
 
 async def setup(bot):
