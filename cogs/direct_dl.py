@@ -105,7 +105,7 @@ class DirectDLCog(commands.Cog):
                 print(f"Error processing TikTok video: {str(e)}")
 
     @commands.command(name="mdl", description="upload music to music server")
-    async def start_download(ctx, url):
+    async def start_download(self, ctx, url):
         response = requests.get(f"http://192.168.1.238:42069/start_download", params={'url': url})
 
         if response.status_code == 200:
