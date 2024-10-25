@@ -110,10 +110,10 @@ class DirectDLCog(commands.Cog):
 
         if response.status_code == 200:
             result = response.json()
-            await ctx.send(f"Download started successfully: {result.get('message', 'No message')}")
+            await ctx.reply(f"Download started successfully: {result.get('message', 'No message')}")
         else:
             error = response.json().get('error', 'Unknown error occurred.')
-            await ctx.send(f"Error: {error}")
+            await ctx.reply(f"Error: {error}")
 
 
 
