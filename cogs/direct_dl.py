@@ -7,6 +7,7 @@ import subprocess
 import asyncio
 import re
 from discord.ext import commands
+import time
 import socketio
 
 class DirectDLCog(commands.Cog):
@@ -14,6 +15,8 @@ class DirectDLCog(commands.Cog):
         self.bot = bot
         self.download_message = None
         self.sio = socketio.AsyncClient()
+        self.last_update_time = 0 
+        self.update_interval = 2
 
         self.bot.loop.create_task(self.connect_to_socket())
     async def connect_to_socket(self):
@@ -116,27 +119,26 @@ class DirectDLCog(commands.Cog):
                 print(f"Error processing TikTok video: {str(e)}")
 
     async def update_message(self, message):
+        current_time = time.time()
         if message and self.download_message:
-            await asyncio.sleep(2)
-            await self.download_message.edit(content=message)
+            if current_time - self.last_update_time >= self.update_interval:
+                await self.download_message.edit(content=message)
+                self.last_update_time = current_time
     
     async def call_backs(self):
         @self.sio.event
         async def connect():
-            print('Connect to the box')
+            print('Connected to the box')
         @self.sio.event
         async def progress_update(data):
             progress = data.get('progress')
-            print("progress")
             await self.update_message(progress)
         @self.sio.event
         async def download_complete(data):
-            print("complete")
             message = data.get('message')
             await self.update_message(message)
         @self.sio.event
         async def download_error(data):
-            print("error")
             error_message = data.get('message')
             await self.update_message(error_message)
 
