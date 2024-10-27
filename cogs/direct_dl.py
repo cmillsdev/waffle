@@ -120,19 +120,19 @@ class DirectDLCog(commands.Cog):
     async def connect():
         print('Connect to the box')
     @sio.on('progress_update')
-    async def progress_update(data):
+    async def progress_update(self, data):
         progress = data.get('progress')
         print("progress")
         if progress and self.download_message:
             await self.download_message.edit(content=f"progress: {progress}")
     @sio.on('download_complete')
-    async def download_complete(data):
+    async def download_complete(self, data):
         print("complete")
         message = data.get('message', 'Download complete!')
         if self.download_message:
             await self.download_message.edit(content=message)
     @sio.on('download_error')
-    async def download_error(data):
+    async def download_error(self, data):
         print("error")
         error_message = data.get('message', 'An error occured')
         if self.download_message:
