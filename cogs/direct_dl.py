@@ -16,7 +16,7 @@ class DirectDLCog(commands.Cog):
         self.sio = socketio.AsyncClient()
 
         self.bot.loop.create_task(self.connect_to_socket())
-        self.call_backs()
+        await self.call_backs()
     async def connect_to_socket(self):
         try:
             await self.sio.connect("http://127.0.0.1:42069")
