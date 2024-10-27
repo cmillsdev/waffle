@@ -16,7 +16,6 @@ class DirectDLCog(commands.Cog):
         self.sio = socketio.AsyncClient()
 
         self.bot.loop.create_task(self.connect_to_socket())
-        await self.call_backs()
     async def connect_to_socket(self):
         try:
             await self.sio.connect("http://127.0.0.1:42069")
@@ -142,6 +141,7 @@ class DirectDLCog(commands.Cog):
 
     @commands.command(name="mdl", description="upload music to music server")
     async def start_download(self, ctx, url):
+        await self.call_backs()
         self.download_message = await ctx.reply("Starting download...")
 
         await sio.emit('start_download', {'url': url, 'quality': 'best'})
