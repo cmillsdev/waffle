@@ -5,7 +5,7 @@ def scrape_btsearch(q):
     url = f"https://bitsearch.to/search?q={q.replace(' ', '+')}&sort=seeders"
 
     with httpx.Client() as client:
-        response = client.get(url)
+        response = client.get(url, timeout=60)
 
     soup = bs(response.text, "html.parser")
     results = []
