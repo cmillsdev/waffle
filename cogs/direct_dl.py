@@ -141,6 +141,8 @@ class DirectDLCog(commands.Cog):
             error_message = data.get('message')
             await self.update_message(message)
 
+        await asyncio.sleep(1)
+
     @commands.command(name="mdl", description="upload music to music server")
     async def start_download(self, ctx, url):
         await self.call_backs()
