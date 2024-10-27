@@ -17,7 +17,7 @@ class DirectDLCog(commands.Cog):
         self.download_message = None
 
         self.bot.loop.create_task(self.connect_to_socket())
-
+    async def connect_to_socket():
         try:
             sio.connect("http://127.0.0.1:42069")
             print("Connected to flask socket")
@@ -117,7 +117,7 @@ class DirectDLCog(commands.Cog):
             except Exception as e:
                 print(f"Error processing TikTok video: {str(e)}")
     @sio.event()
-    def connect():
+    async def connect():
         print('Connect to the box')
     @sio.on('progress_update')
     async def progress_update(data):
