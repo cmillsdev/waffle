@@ -116,7 +116,7 @@ class DirectDLCog(commands.Cog):
                 print(f"Error processing TikTok video: {str(e)}")
 
     async def update_message(self, message):
-        if message and download_message:
+        if message and self.download_message:
             await self.download_message.edit(message)
     
     async def call_backs(self):
