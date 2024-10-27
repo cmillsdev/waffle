@@ -87,7 +87,6 @@ class DirectDLCog(commands.Cog):
     # Listener to catch messages containing TikTok URLs
     @commands.Cog.listener()
     async def on_message(self, message):
-        print('tikkytokky')
         tiktok_url_pattern = r"(https?://(?:www\.)?tiktok\.com/[^\s]+)"
         match = re.search(tiktok_url_pattern, message.content)
         if match:
@@ -124,19 +123,19 @@ class DirectDLCog(commands.Cog):
         progress = data.get('progress')
         print("progress")
         if progress and self.download_message:
-            await self.download_message.edit(content=f"progress: {progress}")
+            await self.download_message.edit(content=data)
     @sio.on('download_complete')
     async def download_complete(self, data):
         print("complete")
-        message = data.get('message', 'Download complete!')
+        message = data.get('message')
         if self.download_message:
-            await self.download_message.edit(content=message)
+            await self.download_message.edit(content=data)
     @sio.on('download_error')
     async def download_error(self, data):
         print("error")
-        error_message = data.get('message', 'An error occured')
+        error_message = data.get('message')
         if self.download_message:
-            await self.download_message.edit(content=f"Error: {error_message}")
+            await self.download_message.edit(content=data)
     @commands.command(name="mdl", description="upload music to music server")
     async def start_download(self, ctx, url):
         self.download_message = await ctx.reply("Starting download...")
