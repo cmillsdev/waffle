@@ -115,22 +115,22 @@ class DirectDLCog(commands.Cog):
 
             except Exception as e:
                 print(f"Error processing TikTok video: {str(e)}")
-    @sio.event()
+    @sio.event
     async def connect():
         print('Connect to the box')
-    @sio.on('progress_update')
+    @sio.event
     async def progress_update(self, data):
         progress = data.get('progress')
         print("progress")
         if progress and self.download_message:
             await self.download_message.edit(content=data)
-    @sio.on('download_complete')
+    @sio.event
     async def download_complete(self, data):
         print("complete")
         message = data.get('message')
         if self.download_message:
             await self.download_message.edit(content=data)
-    @sio.on('download_error')
+    @sio.event
     async def download_error(self, data):
         print("error")
         error_message = data.get('message')
