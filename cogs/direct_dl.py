@@ -106,15 +106,40 @@ class DirectDLCog(commands.Cog):
 
     @commands.command(name="mdl", description="upload music to music server")
     async def start_download(self, ctx, url):
-        response = requests.get(f"http://192.168.1.238:42069/start_download", params={'url': url})
+        FLASK_API_URL = "http://192.168.1.238:42069/start_download"
+        FLASK_WS_URL = "ws://192.168.1.238:42069/socket.io/"
+        #response = requests.get(f"http://192.168.1.238:42069/start_download", params={'url': url})
 
-        if response.status_code == 200:
-            result = response.json()
-            await ctx.reply(f"Download started successfully: {result.get('message', 'No message')}")
-        else:
-            error = response.json().get('error', 'Unknown error occurred.')
-            await ctx.reply(f"Error: {error}")
+        # if response.status_code == 200:
+        #     result = response.json()
+        #     await ctx.reply(f"Download started successfully: {result.get('message', 'No message')}")
+        # else:
+        #     error = response.json().get('error', 'Unknown error occurred.')
+        #     await ctx.reply(f"Error: {error}")
+        message = await ctx.reply("Starting download...")
 
+        # Call Flask API to initiate the download
+        response = requests.get(FLASK_API_URL, params={'url': url, 'quality': quality})
+        if response.status_code != 200:
+            await message.edit(content="Failed to start download.")
+            return
+
+        # Now connect to WebSocket to receive progress updates
+        async with websockets.connect(FLASK_WS_URL) as ws:
+            await ws.send('{"event": "start_download", "data": {"url": url}}')
+            try:
+                async for msg in ws:
+                    data = json.loads(msg)
+                    if data.get('progress_update'):
+                        await message.edit(content=f"Progress: {data['progress_update']['progress']}")
+                    elif data.get('download_complete'):
+                        await message.edit(content="Download completed!")
+                        break
+                    elif data.get('download_error'):
+                        await message.edit(content=f"Error: {data['download_error']['message']}")
+                        break
+            except Exception as e:
+                await message.edit(content=f"Error during WebSocket connection: {str(e)}")
 
 
 async def setup(bot):
