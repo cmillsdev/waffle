@@ -127,17 +127,17 @@ class DirectDLCog(commands.Cog):
         async def progress_update(data):
             progress = data.get('progress')
             print("progress")
-            self.update_message(progress)
+            await self.update_message(progress)
         @self.sio.event
         async def download_complete(data):
             print("complete")
             message = data.get('message')
-            self.update_message(message)
+            await self.update_message(message)
         @self.sio.event
         async def download_error(data):
             print("error")
             error_message = data.get('message')
-            self.update_message(message)
+            await self.update_message(message)
 
     @commands.command(name="mdl", description="upload music to music server")
     async def start_download(self, ctx, url):
