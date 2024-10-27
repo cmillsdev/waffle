@@ -16,6 +16,8 @@ class DirectDLCog(commands.Cog):
         self.bot = bot
         self.download_message = None
 
+        self.bot.loop.create_task(self.connect_to_socket())
+
         try:
             sio.connect("http://127.0.0.1:42069")
             print("Connected to flask socket")
