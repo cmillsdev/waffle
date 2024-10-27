@@ -119,7 +119,7 @@ class DirectDLCog(commands.Cog):
             except Exception as e:
                 print(f"Error processing TikTok video: {str(e)}")
 
-    async def update_message(self, message):
+    async def update_message(self, message, done=False):
         current_time = time.time()
         if message and self.download_message:
             if current_time - self.last_update_time >= self.update_interval:
@@ -128,6 +128,8 @@ class DirectDLCog(commands.Cog):
                     await self.download_message.edit(content=message)
                     self.last_update_time = current_time
                     self.updating = False
+            elif done:
+                await self.download_message.edit(content=message)
     
     async def call_backs(self):
         @self.sio.event
@@ -140,7 +142,7 @@ class DirectDLCog(commands.Cog):
         @self.sio.event
         async def download_complete(data):
             message = data.get('message')
-            await self.update_message(message)
+            await self.update_message(message, done=True)
         @self.sio.event
         async def download_error(data):
             error_message = data.get('message')
