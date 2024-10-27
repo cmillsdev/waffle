@@ -13,6 +13,7 @@ class DirectDLCog(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.sio = socketio.Client()
+        self.download_message = None
 
     # Step 1: Make the download function async-compatible
     async def download_tiktok_video(self, tiktok_url):
@@ -100,31 +101,32 @@ class DirectDLCog(commands.Cog):
                 )
 
                     # Step 9: Clean up the local files asynchronously
+
                 await self.delete_local_file(video_filename)
                 await self.delete_local_file(compressed_video)
 
             except Exception as e:
                 print(f"Error processing TikTok video: {str(e)}")
-    @sio.event()
+    @self.sio.event()
     def connect():
         print('Connect to the box')
-    @sio.event()
+    @self.sio.event()
     def progress_update(data):
-        global download_message
+        
         print(f"Progress: {data['progress']}") 
-    @sio.event
+    @self.sio.event
     def download_complete(data):
-        global download_message
+        
         # Notify Discord bot that the download is complete
         print(data['message'])  # Replace with bot message update logic
-    @sio.event
+    @self.sio.event
     def download_error(data):
-        global download_message
+        
         # Handle errors
         print(f"Error: {data['message']}")  # Replace with bot message update logic
     @commands.command(name="mdl", description="upload music to music server")
     async def start_download(self, ctx, url):
-        global download_message
+        
         if not sio.connected:
             sio.connect("http://192.168.1.238:42069")
         #FLASK_API_URL = "http://192.168.1.238:42069/start_download"
@@ -137,7 +139,7 @@ class DirectDLCog(commands.Cog):
         # else:
         #     error = response.json().get('error', 'Unknown error occurred.')
         #     await ctx.reply(f"Error: {error}")
-        download_message = await ctx.reply("Starting download...")
+        self.download_message = await ctx.reply("Starting download...")
 
         # Call Flask API to initiate the download
         # response = requests.get(FLASK_API_URL, params={'url': url, 'quality': 'best'})
