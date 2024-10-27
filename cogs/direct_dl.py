@@ -9,10 +9,10 @@ import re
 from discord.ext import commands
 import socketio
 
+sio = socketio.Client()
 class DirectDLCog(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-        self.sio = socketio.Client()
         self.download_message = None
 
     # Step 1: Make the download function async-compatible
@@ -107,19 +107,19 @@ class DirectDLCog(commands.Cog):
 
             except Exception as e:
                 print(f"Error processing TikTok video: {str(e)}")
-    @self.sio.event()
+    @sio.event()
     def connect():
         print('Connect to the box')
-    @self.sio.event()
+    @sio.event()
     def progress_update(data):
         
         print(f"Progress: {data['progress']}") 
-    @self.sio.event
+    @sio.event
     def download_complete(data):
         
         # Notify Discord bot that the download is complete
         print(data['message'])  # Replace with bot message update logic
-    @self.sio.event
+    @sio.event
     def download_error(data):
         
         # Handle errors
