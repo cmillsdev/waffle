@@ -7,14 +7,13 @@ import subprocess
 import asyncio
 import re
 from discord.ext import commands
-import flask_socketio
-
-sio = flask_socketio.AsyncClient()
+import socketio
 
 class DirectDLCog(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.download_message = None
+        self.sio = socketio.AsyncClient()
 
         self.bot.loop.create_task(self.connect_to_socket())
     async def connect_to_socket(self):
@@ -53,10 +52,10 @@ class DirectDLCog(commands.Cog):
             
             ffmpeg_command = [
                 "ffmpeg", "-i", input_file,
-		"-c:v", "libvpx",
+		        "-c:v", "libvpx",
                 "-vf", "scale=-2:720",  # Rescale to max height of 720 while keeping aspect ratio
                 "-b:v", "1M",  # Set video bitrate to 1Mbps for compression
-		"-c:a", "libvorbis",
+		        "-c:a", "libvorbis",
                 "-b:a", "128k",  # Set audio bitrate to 128kbps
                 "-maxrate", "1M",  # Limit max bitrate
                 "-bufsize", "2M",  # Buffer size
@@ -115,27 +114,31 @@ class DirectDLCog(commands.Cog):
 
             except Exception as e:
                 print(f"Error processing TikTok video: {str(e)}")
-    @sio.event
-    async def connect():
-        print('Connect to the box')
-    @sio.event
-    async def progress_update(self, data):
-        progress = data.get('progress')
-        print("progress")
-        if progress and self.download_message:
-            await self.download_message.edit(content=data)
-    @sio.event
-    async def download_complete(self, data):
-        print("complete")
-        message = data.get('message')
-        if self.download_message:
-            await self.download_message.edit(content=data)
-    @sio.event
-    async def download_error(self, data):
-        print("error")
-        error_message = data.get('message')
-        if self.download_message:
-            await self.download_message.edit(content=data)
+
+    async def update_message(self, message):
+        if message and download_message:
+            await self.download_message.edit(message)
+    
+    async def call_backs(self):
+        @self.sio.event
+        async def connect():
+            print('Connect to the box')
+        @self.sio.event
+        async def progress_update(data):
+            progress = data.get('progress')
+            print("progress")
+            self.update_message(progress)
+        @self.sio.event
+        async def download_complete(data):
+            print("complete")
+            message = data.get('message')
+            self.update_message(message)
+        @self.sio.event
+        async def download_error(data):
+            print("error")
+            error_message = data.get('message')
+            self.update_message(message)
+
     @commands.command(name="mdl", description="upload music to music server")
     async def start_download(self, ctx, url):
         self.download_message = await ctx.reply("Starting download...")
