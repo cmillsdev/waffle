@@ -17,6 +17,7 @@ class DirectDLCog(commands.Cog):
         self.sio = socketio.AsyncClient()
         self.last_update_time = 0 
         self.update_interval = 2
+        self.updating = False
 
         self.bot.loop.create_task(self.connect_to_socket())
     async def connect_to_socket(self):
@@ -122,8 +123,11 @@ class DirectDLCog(commands.Cog):
         current_time = time.time()
         if message and self.download_message:
             if current_time - self.last_update_time >= self.update_interval:
-                await self.download_message.edit(content=message)
-                self.last_update_time = current_time
+                if not self.updating:
+                    self.updating = True
+                    await self.download_message.edit(content=message)
+                    self.last_update_time = current_time
+                    self.updating = False
     
     async def call_backs(self):
         @self.sio.event
