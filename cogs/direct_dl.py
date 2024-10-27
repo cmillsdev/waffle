@@ -119,7 +119,7 @@ class DirectDLCog(commands.Cog):
         message = await ctx.reply("Starting download...")
 
         # Call Flask API to initiate the download
-        response = requests.get(FLASK_API_URL, params={'url': url, 'quality': quality})
+        response = requests.get(FLASK_API_URL, params={'url': url, 'quality': 'best'})
         if response.status_code != 200:
             await message.edit(content="Failed to start download.")
             return
