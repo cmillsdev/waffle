@@ -117,7 +117,7 @@ class DirectDLCog(commands.Cog):
 
     async def update_message(self, message):
         if message and self.download_message:
-            await self.download_message.edit(message)
+            await self.download_message.edit(content=message)
     
     async def call_backs(self):
         @self.sio.event
