@@ -144,9 +144,9 @@ class DirectDLCog(commands.Cog):
         await self.call_backs()
         self.download_message = await ctx.reply("Starting download...")
 
-        await sio.emit('start_download', {'url': url, 'quality': 'best'})
+        await self.sio.emit('start_download', {'url': url, 'quality': 'best'})
 
-        if not sio.connected:
+        if not self.sio.connected:
             await self.download_message.edit(content="Failed to connect to socket")
        
 
