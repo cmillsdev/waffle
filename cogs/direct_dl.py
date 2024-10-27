@@ -7,9 +7,9 @@ import subprocess
 import asyncio
 import re
 from discord.ext import commands
-import socketio
+import flask_socketio
 
-sio = socketio.AsyncClient()
+sio = flask_socketio.AsyncClient()
 
 class DirectDLCog(commands.Cog):
     def __init__(self, bot):
