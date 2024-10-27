@@ -118,7 +118,6 @@ class DirectDLCog(commands.Cog):
     async def update_message(self, message):
         if message and self.download_message:
             await self.download_message.edit(content=message)
-        await asyncio.sleep(1000)
     
     async def call_backs(self):
         @self.sio.event
@@ -139,6 +138,7 @@ class DirectDLCog(commands.Cog):
             print("error")
             error_message = data.get('message')
             await self.update_message(message)
+        await asyncio.sleep(1000)
 
     @commands.command(name="mdl", description="upload music to music server")
     async def start_download(self, ctx, url):
