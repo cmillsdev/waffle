@@ -9,7 +9,7 @@ import re
 from discord.ext import commands
 import socketio
 
-sio = socketio.Client()
+sio = socketio.AsyncClient()
 
 class DirectDLCog(commands.Cog):
     def __init__(self, bot):
