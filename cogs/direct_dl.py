@@ -139,7 +139,7 @@ class DirectDLCog(commands.Cog):
         async def download_error(data):
             print("error")
             error_message = data.get('message')
-            await self.update_message(message)
+            await self.update_message(error_message)
 
         await asyncio.sleep(1)
 
