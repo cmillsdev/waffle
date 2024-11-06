@@ -83,7 +83,7 @@ class TasksCog(commands.Cog):
         total_total_votes = results['partyControlData']['results'][0]['offices']['P']['votes']
         total_trump_votes = results['partyControlData']['results'][0]['offices']['P']['party_balance']['GOP']['votes']
         total_harris_votes = results['partyControlData']['results'][0]['offices']['P']['party_balance']['DEM']['votes']
-        embed.add_field(name="**TOTALS**", value=f"**H**: {((total_harris_votes/total_total_votes)*100):.2f} | **T**: {((total_trump_votes/total_total_votes)*100):.2f}", inline=False)
+        # results_msg = f'**TOTALS**\n**H**: {((total_harris_votes/total_total_votes)*100):.2f} | **T**: {((total_trump_votes/total_total_votes)*100):.2f}'
         for race in races:
             gop_leads = 0
             dem_leads = 0
@@ -103,9 +103,11 @@ class TasksCog(commands.Cog):
                 gop_leads += 1
 
             if trump_votes != 0 and harris_votes != 0:
-                embed.add_field(name=f"{state_name}({lead_notifier})", value=f"**T**: {trump_percent:.2f}% | **H**: {harris_percent:.2f}%\n*Expctd*: {leftover_percent:.2f}%")
-        embed.add_field(name="**TOTALS**", value=f"**H**: {((total_harris_votes/total_total_votes)*100):.2f} | **T**: {((total_trump_votes/total_total_votes)*100):.2f}\n*States*: **H|T**: {dem_leads}|{gop_leads}", inline=False)
-        await p_channel.send(embed=embed)
+                results_msg += f"\n{state_name}({lead_notifier})\n**T**: {trump_percent:.2f}% | **H**: {harris_percent:.2f}%\n*Expctd*: {leftover_percent:.2f}%"
+        
+        #results_msg = f'**TOTALS**\n**H**: {((total_harris_votes/total_total_votes)*100):.2f} | **T**: {((total_trump_votes/total_total_votes)*100):.2f}'+ results_msg
+        results_msg = f"**TOTALS**\n**H**: {((total_harris_votes/total_total_votes)*100):.2f} | **T**: {((total_trump_votes/total_total_votes)*100):.2f}\n*States*: **H|T**: {dem_leads}|{gop_leads}" + results_msg
+        await p_channel.send(results_msg)
 
         
 
