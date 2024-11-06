@@ -73,11 +73,13 @@ class TasksCog(commands.Cog):
     @tasks.loop(seconds=300)
     async def basic_vote_task(self):
         URL = "https://static01.nyt.com/elections-assets/pages/data/2024-11-05/results-president.json"
+        CALLS_URL = "https://static01.nyt.com/elections-assets/pages/data/feeds/f3258ab4-9a8f-42b3-97b7-dce4ae4c8e07/race-calls/2024-11-05.json"
         p_channel = await self.bot.fetch_channel('1263616237603393556')
         async with httpx.AsyncClient() as resp:
             results = await resp.get(URL)
+            calls = await resp.get(CALLS_URL)
         results = results.json()
-
+        calls = calls.json()
         races = results['races']
         embed = discord.Embed(title="Current Votes")
         embed2 = discord.Embed()
@@ -86,9 +88,12 @@ class TasksCog(commands.Cog):
         total_harris_votes = results['partyControlData']['results'][0]['offices']['P']['party_balance']['DEM']['votes']
         #embed.add_field(name="**TOTALS**", value=f"**H**: {((total_harris_votes/total_total_votes)*100):.2f} | **T**: {((total_trump_votes/total_total_votes)*100):.2f}", inline=False)
         fields = 0
+        gop_leads = 0
+        dem_leads = 0
+        state_calls = [0,0]
+        gop_calls = ''
+        dem_calls = ''
         for race in races:
-            gop_leads = 0
-            dem_leads = 0
             state_name = race['top_reporting_unit']['name']
             total_votes = race['top_reporting_unit']['total_expected_vote']
             trump_votes = race['top_reporting_unit']['candidates'][0]['votes']['total']
@@ -103,7 +108,14 @@ class TasksCog(commands.Cog):
             else:
                 lead_notifier = 'REP'
                 gop_leads += 1
-
+        for call in calls['data']:
+            if call['office_id'] == 'P':
+                if call['party'] == 'Democrat':
+                    state_calls[0] += 1
+                    dem_calls += call['state_abb']
+                elif call['party'] == 'Republican':
+                    state_calls[1] += 1
+                    gop_calls += call['state_abb']
             # if trump_votes != 0 and harris_votes != 0:
             #     if fields >= 25:
             #         embed.add_field(name=f"{state_name}({lead_notifier})", value=f"**T**: {trump_percent:.2f}% | **H**: {harris_percent:.2f}%\n*Expctd*: {leftover_percent:.2f}%")
@@ -112,8 +124,9 @@ class TasksCog(commands.Cog):
             #         fields += 1
             #         embed2.add_field(name=f"{state_name}({lead_notifier})", value=f"**T**: {trump_percent:.2f}% | **H**: {harris_percent:.2f}%\n*Expctd*: {leftover_percent:.2f}%")
         #embed.add_field(name="**TOTALS**", value=f"**H**: {((total_harris_votes/total_total_votes)*100):.2f} | **T**: {((total_trump_votes/total_total_votes)*100):.2f}\n*States*: **H|T**: {dem_leads}|{gop_leads}", inline=False)
-        embed.add_field(name="**HARRIS**", value=f"{((total_harris_votes/total_total_votes)*100):.2f}\n**States** {dem_leads}")
-        embed.add_field(name="**TRUMP**", value=f"{((total_trump_votes/total_total_votes)*100):.2f}\n**States:** {gop_leads}")
+
+        embed.add_field(name="**HARRIS**", value=f"{((total_harris_votes/total_total_votes)*100):.2f}%\n**Vote leads:**\n{dem_leads}\nRace Calls: {state_calls[0]}\n{dem_calls}")
+        embed.add_field(name="**TRUMP**", value=f"{((total_trump_votes/total_total_votes)*100):.2f}%\n**Vote leads:**\n{gop_leads}\nRace Calls: {state_calls[1]}\n{gop_calls}")
         await p_channel.send(embed=embed)
         # if fields > 25:
         #     await p_channel.send(embed=embed2)
