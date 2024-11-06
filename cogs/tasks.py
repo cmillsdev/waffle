@@ -11,7 +11,6 @@ class TasksCog(commands.Cog):
         self.bot = bot
         self.alldebrid = bot.debrid
         self.debrid_check.start()
-        self.basic_vote_task.start()
         self.console = Console()
 
     @tasks.loop(seconds=30)
