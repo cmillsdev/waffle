@@ -69,7 +69,8 @@ class TasksCog(commands.Cog):
                 except Exception as e:
                     self.console.print_exception(show_locals=True)
                     pass
-        
+    
+
     @tasks.loop(seconds=300)
     async def basic_vote_task(self):
         URL = "https://static01.nyt.com/elections-assets/pages/data/2024-11-05/results-president.json"
@@ -119,6 +120,8 @@ class TasksCog(commands.Cog):
             #         fields += 1
             #         embed2.add_field(name=f"{state_name}({lead_notifier})", value=f"**T**: {trump_percent:.2f}% | **H**: {harris_percent:.2f}%\n*Expctd*: {leftover_percent:.2f}%")
         #embed.add_field(name="**TOTALS**", value=f"**H**: {((total_harris_votes/total_total_votes)*100):.2f} | **T**: {((total_trump_votes/total_total_votes)*100):.2f}\n*States*: **H|T**: {dem_leads}|{gop_leads}", inline=False)
+        georgia = races[9]
+        
         pennsyl = races[42]
         total_votes = pennsyl['top_reporting_unit']['total_expected_vote']
         trump_votes = pennsyl['top_reporting_unit']['candidates'][0]['votes']['total']
@@ -131,12 +134,41 @@ class TasksCog(commands.Cog):
         gop_seats = results['partyControlData']['results'][0]['offices']['P']['party_balance']['GOP']['seats']
         embed.add_field(name=f"**HARRIS** ({dem_seats})", value=f"{((total_harris_votes/total_total_votes)*100):.2f}%\n**Vote leads:** {dem_leads}\n**Race Calls:** {state_calls[0]}\n{dem_calls}")
         embed.add_field(name=f"**TRUMP** ({gop_seats})", value=f"{((total_trump_votes/total_total_votes)*100):.2f}%\n**Vote leads:** {gop_leads}\n**Race Calls:** {state_calls[1]}\n{gop_calls}")
-        embed.add_field(name="__**Pennsylvania**__", value=f"**DEM**: {harris_percent:.2f}%\n**GOP**: {trump_percent:.2f}%\n**---**: {leftover_percent:.2f}%", inline=False)
+        state1_name, state1_value = await build_state_field("pennsylvania", races)
+        state2_name, state2_value = await build_state_field("georgia", races)
+        embed.add_field(name=state1_name, value=state1_value)
+        embed.add_field(name=state2_name, value=state2_value)
         await p_channel.send(embed=embed)
         # if fields > 25:
         #     await p_channel.send(embed=embed2)
 
+    async def build_state_field(self, state_name, races):
+        # Find the race for the given state
+        state_race = next((race for race in races if race['top_reporting_unit']['name'].lower() == state_name), None)
+        if not state_race:
+            return None  # Return None if the state is not found in races data
+
+        # Calculate the total expected votes and each candidate's votes
+        total_votes = state_race['top_reporting_unit']['total_expected_vote']
+        trump_votes = state_race['top_reporting_unit']['candidates'][0]['votes']['total']
+        harris_votes = state_race['top_reporting_unit']['candidates'][1]['votes']['total']
         
+        # Calculate the vote percentages for each candidate
+        trump_percent = (trump_votes / total_votes) * 100 if total_votes > 0 else 0
+        harris_percent = (harris_votes / total_votes) * 100 if total_votes > 0 else 0
+        counted_percent = trump_percent + harris_percent
+        leftover_percent = 100 - counted_percent
+
+        # Create the field data as a dictionary
+        field_name = f"__**{state_name}**__"
+        field_value = (
+            f"**DEM**: {harris_percent:.2f}%\n"
+            f"**GOP**: {trump_percent:.2f}%\n"
+            f"**Remaining**: {leftover_percent:.2f}%"
+        )
+        
+        # Return as a tuple that can be directly used with embed.add_field
+        return field_name, field_value
 
 
 
