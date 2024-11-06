@@ -10,6 +10,7 @@ class TasksCog(commands.Cog):
         self.bot = bot
         self.alldebrid = bot.debrid
         self.debrid_check.start()
+        self.basic_vote_task.start()
         self.console = Console()
 
     @tasks.loop(seconds=30)
@@ -68,7 +69,7 @@ class TasksCog(commands.Cog):
                     self.console.print_exception(show_locals=True)
                     pass
         
-    @tasks.loop(seconds=300)
+    @tasks.loop(seconds=30)
     async def basic_vote_task(self):
         URL = "https://static01.nyt.com/elections-assets/pages/data/2024-11-05/results-president.json"
         p_channel = await self.bot.fetch_channel('1263616237603393556')
