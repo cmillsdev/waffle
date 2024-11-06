@@ -94,6 +94,8 @@ class TasksCog(commands.Cog):
         dem_calls = ''
         for race in races:
             # state_name = race['top_reporting_unit']['name']
+            trump_votes = race['top_reporting_unit']['candidates'][0]['votes']['total']
+            harris_votes = race['top_reporting_unit']['candidates'][1]['votes']['total']
             
             if harris_votes > trump_votes:
                 lead_notifier = 'DEM'
@@ -129,7 +131,7 @@ class TasksCog(commands.Cog):
         gop_seats = results['partyControlData']['results'][0]['offices']['P']['party_balance']['GOP']['seats']
         embed.add_field(name="**HARRIS** ({dem_seats})", value=f"{((total_harris_votes/total_total_votes)*100):.2f}%\n**Vote leads:** {dem_leads}\n**Race Calls:** {state_calls[0]}\n{dem_calls}")
         embed.add_field(name="**TRUMP** ({gop_seats})", value=f"{((total_trump_votes/total_total_votes)*100):.2f}%\n**Vote leads:** {gop_leads}\n**Race Calls:** {state_calls[1]}\n{gop_calls}")
-        embed.add_field(name="__**Pennsylvania**__", value=f"**DEM**: {harris_percent}\n**GOP**: {trump_percent}\n**-**: {leftover_percent}")
+        embed.add_field(name="__**Pennsylvania**__", value=f"**DEM**: {harris_percent}\n**GOP**: {trump_percent}\n**-**: {leftover_percent}", inline=False)
         await p_channel.send(embed=embed)
         # if fields > 25:
         #     await p_channel.send(embed=embed2)
