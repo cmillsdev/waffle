@@ -105,7 +105,7 @@ class TasksCog(commands.Cog):
                 gop_leads += 1
 
             if trump_votes != 0 and harris_votes != 0:
-                if fields > 25:
+                if fields >= 25:
                     embed.add_field(name=f"{state_name}({lead_notifier})", value=f"**T**: {trump_percent:.2f}% | **H**: {harris_percent:.2f}%\n*Expctd*: {leftover_percent:.2f}%")
                     fields += 1
                 else:
