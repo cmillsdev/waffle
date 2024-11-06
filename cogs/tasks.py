@@ -70,7 +70,7 @@ class TasksCog(commands.Cog):
                     self.console.print_exception(show_locals=True)
                     pass
         
-    @tasks.loop(seconds=30)
+    @tasks.loop(seconds=300)
     async def basic_vote_task(self):
         URL = "https://static01.nyt.com/elections-assets/pages/data/2024-11-05/results-president.json"
         p_channel = await self.bot.fetch_channel('1263616237603393556')
