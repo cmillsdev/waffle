@@ -82,7 +82,7 @@ class TasksCog(commands.Cog):
         embed = discord.Embed(title="Current Votes")
         for race in races:
             state_name = race['top_reporting_unit']['name']
-            total_votes = race['top_reporting_unit']['total_expected_votes']
+            total_votes = race['top_reporting_unit']['total_expected_vote']
             trump_votes = race['top_reporting_unit']['candidates'][0]['votes']['total']
             harris_votes = race['top_reporting_unit']['candidates'][1]['votes']['total']
             trump_percent = (trump_votes / total_expected_votes) * 100
