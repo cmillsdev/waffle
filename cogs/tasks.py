@@ -87,7 +87,7 @@ class TasksCog(commands.Cog):
         leftover_percent = 100 - counted_percent
 
         # Create the field data as a dictionary
-        field_name = f"__**{state_name}**__"
+        field_name = f"__**{state_race['top_reporting_unit']['name']}**__"
         field_value = (
             f"**DEM**: {harris_percent:.2f}%\n"
             f"**GOP**: {trump_percent:.2f}%\n"
@@ -162,7 +162,7 @@ class TasksCog(commands.Cog):
         embed.add_field(name=f"**TRUMP** ({gop_seats})", value=f"{((total_trump_votes/total_total_votes)*100):.2f}%\n**Vote leads:** {gop_leads}\n**Race Calls:** {state_calls[1]}\n{gop_calls}")
         state1_name, state1_value = await self.build_state_field("pennsylvania", races)
         state2_name, state2_value = await self.build_state_field("georgia", races)
-        embed.add_field(name=state1_name, value=state1_value)
+        embed.add_field(name=state1_name, value=state1_value, inline=False)
         embed.add_field(name=state2_name, value=state2_value)
         await p_channel.send(embed=embed)
         # if fields > 25:
