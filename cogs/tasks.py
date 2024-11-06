@@ -1,5 +1,4 @@
 from discord.ext import tasks, commands
-import requests
 import httpx
 import helpers.embed
 import config
@@ -74,7 +73,8 @@ class TasksCog(commands.Cog):
     async def basic_vote_task(self):
         URL = "https://static01.nyt.com/elections-assets/pages/data/2024-11-05/results-president.json"
         p_channel = await self.bot.fetch_channel('1263616237603393556')
-        results = await requests.get(URL)
+        async with httpx.AsyncClient() as resp:
+            results = await resp.get(URL)
         results = results.json()
 
         races = results['races']
