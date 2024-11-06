@@ -91,7 +91,7 @@ class TasksCog(commands.Cog):
             leftover_percent = 100 - counted_percent
 
             if trump_votes != 0 and harris_votes != 0:
-                embed.add_field(name=state_name, value=f"T: {trump_percent:.2f}% | H: {harris_percent:.2f}%\nLeft: {leftover_percent:.2f}", inline=False)
+                embed.add_field(name=state_name, value=f"T: {trump_percent:.2f}% | H: {harris_percent:.2f}%\nLeft: {leftover_percent:.2f}%")
 
         await p_channel.send(embed=embed)
 
