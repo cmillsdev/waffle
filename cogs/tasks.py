@@ -82,11 +82,16 @@ class TasksCog(commands.Cog):
         embed = discord.Embed(title="Current Votes")
         for race in races:
             state_name = race['top_reporting_unit']['name']
+            total_votes = race['top_reporting_unit']['total_expected_votes']
             trump_votes = race['top_reporting_unit']['candidates'][0]['votes']['total']
             harris_votes = race['top_reporting_unit']['candidates'][1]['votes']['total']
+            trump_percent = (trump_votes / total_expected_votes) * 100
+            harris_percent = (harris_votes / total_expected_votes) * 100
+            counted_percent = trump_percent + harris_percent
+            leftover_percent = 100 - counted_percent
 
             if trump_votes != 0 and harris_votes != 0:
-                embed.add_field(name=state_name, value=f"T: {trump_votes} | H: {harris_votes}", inline=False)
+                embed.add_field(name=state_name, value=f"T: {trump_percent:.2f}% | H: {harris_percent:.2f}%\nLeft: {leftover_percent:.2f}", inline=False)
 
         await p_channel.send(embed=embed)
 
