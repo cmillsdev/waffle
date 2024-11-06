@@ -85,8 +85,8 @@ class TasksCog(commands.Cog):
             total_votes = race['top_reporting_unit']['total_expected_vote']
             trump_votes = race['top_reporting_unit']['candidates'][0]['votes']['total']
             harris_votes = race['top_reporting_unit']['candidates'][1]['votes']['total']
-            trump_percent = (trump_votes / total_expected_votes) * 100
-            harris_percent = (harris_votes / total_expected_votes) * 100
+            trump_percent = (trump_votes / total_votes) * 100
+            harris_percent = (harris_votes / total_votes) * 100
             counted_percent = trump_percent + harris_percent
             leftover_percent = 100 - counted_percent
 
