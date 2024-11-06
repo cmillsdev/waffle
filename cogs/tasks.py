@@ -80,6 +80,10 @@ class TasksCog(commands.Cog):
 
         races = results['races']
         embed = discord.Embed(title="Current Votes")
+        total_total_votes = results['partyControlData']['results'][0]['offices']['P']['votes']
+        total_trump_votes = results['partyControlData']['results'][0]['offices']['P']['party_balance']['REP']['votes']
+        total_harris_votes = results['partyControlData']['results'][0]['offices']['P']['party_balance']['DEM']['votes']
+        embed.add_field(name="**TOTALS**", value=f"H: {(total_harris_votes/total_total_votes)*100} | T: {(total_trump_votes/total_total_votes)*100}")
         for race in races:
             state_name = race['top_reporting_unit']['name']
             total_votes = race['top_reporting_unit']['total_expected_vote']
@@ -89,9 +93,13 @@ class TasksCog(commands.Cog):
             harris_percent = (harris_votes / total_votes) * 100
             counted_percent = trump_percent + harris_percent
             leftover_percent = 100 - counted_percent
+            if harris_votes > trump_votes:
+                lead_notifier = 'DEM'
+            else:
+                lead_notifier = 'REP'
 
             if trump_votes != 0 and harris_votes != 0:
-                embed.add_field(name=state_name, value=f"T: {trump_percent:.2f}% | H: {harris_percent:.2f}%\nLeft: {leftover_percent:.2f}%")
+                embed.add_field(name=f"{state_name}({lead_notifier})", value=f"**T**: {trump_percent:.2f}% | **H**: {harris_percent:.2f}%\n*Expctd*: {leftover_percent:.2f}%")
 
         await p_channel.send(embed=embed)
 
