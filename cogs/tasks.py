@@ -111,10 +111,12 @@ class TasksCog(commands.Cog):
             #     else:
             #         fields += 1
             #         embed2.add_field(name=f"{state_name}({lead_notifier})", value=f"**T**: {trump_percent:.2f}% | **H**: {harris_percent:.2f}%\n*Expctd*: {leftover_percent:.2f}%")
-        embed.insert_field_at(0,name="**TOTALS**", value=f"**H**: {((total_harris_votes/total_total_votes)*100):.2f} | **T**: {((total_trump_votes/total_total_votes)*100):.2f}\n*States*: **H|T**: {dem_leads}|{gop_leads}", inline=False)
+        #embed.add_field(name="**TOTALS**", value=f"**H**: {((total_harris_votes/total_total_votes)*100):.2f} | **T**: {((total_trump_votes/total_total_votes)*100):.2f}\n*States*: **H|T**: {dem_leads}|{gop_leads}", inline=False)
+        embed.add_field(name="**HARRIS**", value=f"{((total_harris_votes/total_total_votes)*100):.2f}\n**States in favor:**{dem_leads}")
+        embed.add_field(name="**TRUMP**", value=f"{((total_harris_votes/total_total_votes)*100):.2f}\n**States in favor:**{gop_leads}")
         await p_channel.send(embed=embed)
-        if fields > 25:
-            await p_channel.send(embed=embed2)
+        # if fields > 25:
+        #     await p_channel.send(embed=embed2)
 
         
 
