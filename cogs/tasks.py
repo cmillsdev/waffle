@@ -1,4 +1,5 @@
 from discord.ext import tasks, commands
+import requests
 import httpx
 import helpers.embed
 import config
