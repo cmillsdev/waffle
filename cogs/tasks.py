@@ -112,10 +112,10 @@ class TasksCog(commands.Cog):
             if call['office_id'] == 'P':
                 if call['party'] == 'Democrat':
                     state_calls[0] += 1
-                    dem_calls += call['state_abb']
+                    dem_calls += f"{call['state_abb']}, "
                 elif call['party'] == 'Republican':
                     state_calls[1] += 1
-                    gop_calls += call['state_abb']
+                    gop_calls += f"{call['state_abb']}, "
             # if trump_votes != 0 and harris_votes != 0:
             #     if fields >= 25:
             #         embed.add_field(name=f"{state_name}({lead_notifier})", value=f"**T**: {trump_percent:.2f}% | **H**: {harris_percent:.2f}%\n*Expctd*: {leftover_percent:.2f}%")
@@ -125,8 +125,8 @@ class TasksCog(commands.Cog):
             #         embed2.add_field(name=f"{state_name}({lead_notifier})", value=f"**T**: {trump_percent:.2f}% | **H**: {harris_percent:.2f}%\n*Expctd*: {leftover_percent:.2f}%")
         #embed.add_field(name="**TOTALS**", value=f"**H**: {((total_harris_votes/total_total_votes)*100):.2f} | **T**: {((total_trump_votes/total_total_votes)*100):.2f}\n*States*: **H|T**: {dem_leads}|{gop_leads}", inline=False)
 
-        embed.add_field(name="**HARRIS**", value=f"{((total_harris_votes/total_total_votes)*100):.2f}%\n**Vote leads:**\n{dem_leads}\nRace Calls: {state_calls[0]}\n{dem_calls}")
-        embed.add_field(name="**TRUMP**", value=f"{((total_trump_votes/total_total_votes)*100):.2f}%\n**Vote leads:**\n{gop_leads}\nRace Calls: {state_calls[1]}\n{gop_calls}")
+        embed.add_field(name="**HARRIS**", value=f"{((total_harris_votes/total_total_votes)*100):.2f}%\n**Vote leads:**{dem_leads}\n**Race Calls:** {state_calls[0]}\n{dem_calls}")
+        embed.add_field(name="**TRUMP**", value=f"{((total_trump_votes/total_total_votes)*100):.2f}%\n**Vote leads:**{gop_leads}\n**Race Calls:** {state_calls[1]}\n{gop_calls}")
         await p_channel.send(embed=embed)
         # if fields > 25:
         #     await p_channel.send(embed=embed2)
