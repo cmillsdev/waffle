@@ -164,10 +164,12 @@ class TasksCog(commands.Cog):
         state2_name, state2_value = await self.build_state_field("georgia", races)
         state3_name, state3_value = await self.build_state_field("michigan", races)
         state4_name, state4_value = await self.build_state_field("wisconsin", races)
+        state5_name, state5_value = await self.build_state_field("minnesota", races)
         embed.add_field(name=state1_name, value=state1_value, inline=False)
         embed.add_field(name=state2_name, value=state2_value)
         embed.add_field(name=state3_name, value=state3_value)
         embed.add_field(name=state4_name, value=state4_value)
+        embed.add_field(name=state5_name, value=state5_value)
         await p_channel.send(embed=embed)
         # if fields > 25:
         #     await p_channel.send(embed=embed2)
