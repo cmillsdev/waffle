@@ -162,8 +162,12 @@ class TasksCog(commands.Cog):
         embed.add_field(name=f"**TRUMP** ({gop_seats})", value=f"{((total_trump_votes/total_total_votes)*100):.2f}%\n**Vote leads:** {gop_leads}\n**Race Calls:** {state_calls[1]}\n{gop_calls}")
         state1_name, state1_value = await self.build_state_field("pennsylvania", races)
         state2_name, state2_value = await self.build_state_field("georgia", races)
+        state3_name, state3_value = await self.build_state_field("michigan", races)
+        state4_name, state4_value = await self.build_state_field("wisconsin", races)
         embed.add_field(name=state1_name, value=state1_value, inline=False)
         embed.add_field(name=state2_name, value=state2_value)
+        embed.add_field(name=state3_name, value=state3_value)
+        embed.add_field(name=state4_name, value=state4_value)
         await p_channel.send(embed=embed)
         # if fields > 25:
         #     await p_channel.send(embed=embed2)
