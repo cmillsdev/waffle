@@ -104,13 +104,13 @@ class TasksCog(commands.Cog):
                 lead_notifier = 'REP'
                 gop_leads += 1
 
-            if trump_votes != 0 and harris_votes != 0:
-                if fields >= 25:
-                    embed.add_field(name=f"{state_name}({lead_notifier})", value=f"**T**: {trump_percent:.2f}% | **H**: {harris_percent:.2f}%\n*Expctd*: {leftover_percent:.2f}%")
-                    fields += 1
-                else:
-                    fields += 1
-                    embed2.add_field(name=f"{state_name}({lead_notifier})", value=f"**T**: {trump_percent:.2f}% | **H**: {harris_percent:.2f}%\n*Expctd*: {leftover_percent:.2f}%")
+            # if trump_votes != 0 and harris_votes != 0:
+            #     if fields >= 25:
+            #         embed.add_field(name=f"{state_name}({lead_notifier})", value=f"**T**: {trump_percent:.2f}% | **H**: {harris_percent:.2f}%\n*Expctd*: {leftover_percent:.2f}%")
+            #         fields += 1
+            #     else:
+            #         fields += 1
+            #         embed2.add_field(name=f"{state_name}({lead_notifier})", value=f"**T**: {trump_percent:.2f}% | **H**: {harris_percent:.2f}%\n*Expctd*: {leftover_percent:.2f}%")
         embed.insert_field_at(0,name="**TOTALS**", value=f"**H**: {((total_harris_votes/total_total_votes)*100):.2f} | **T**: {((total_trump_votes/total_total_votes)*100):.2f}\n*States*: **H|T**: {dem_leads}|{gop_leads}", inline=False)
         await p_channel.send(embed=embed)
         if fields > 25:
