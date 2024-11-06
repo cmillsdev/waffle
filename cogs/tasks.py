@@ -160,8 +160,8 @@ class TasksCog(commands.Cog):
         gop_seats = results['partyControlData']['results'][0]['offices']['P']['party_balance']['GOP']['seats']
         embed.add_field(name=f"**HARRIS** ({dem_seats})", value=f"{((total_harris_votes/total_total_votes)*100):.2f}%\n**Vote leads:** {dem_leads}\n**Race Calls:** {state_calls[0]}\n{dem_calls}")
         embed.add_field(name=f"**TRUMP** ({gop_seats})", value=f"{((total_trump_votes/total_total_votes)*100):.2f}%\n**Vote leads:** {gop_leads}\n**Race Calls:** {state_calls[1]}\n{gop_calls}")
-        state1_name, state1_value = await build_state_field("pennsylvania", races)
-        state2_name, state2_value = await build_state_field("georgia", races)
+        state1_name, state1_value = await self.build_state_field("pennsylvania", races)
+        state2_name, state2_value = await self.build_state_field("georgia", races)
         embed.add_field(name=state1_name, value=state1_value)
         embed.add_field(name=state2_name, value=state2_value)
         await p_channel.send(embed=embed)
