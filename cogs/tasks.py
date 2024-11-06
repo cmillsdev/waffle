@@ -86,7 +86,7 @@ class TasksCog(commands.Cog):
             harris_votes = race['top_reporting_unit']['candidates'][1]['votes']['total']
 
             if trump_votes != 0 and harris_votes != 0:
-                embed.add_field(name=state_name, value=f"T: {trump_votes} | H: {harris_votes}", inline=True)
+                embed.add_field(name=state_name, value=f"T: {trump_votes} | H: {harris_votes}", inline=False)
 
         await p_channel.send(embed=embed)
 
