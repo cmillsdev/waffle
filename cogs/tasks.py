@@ -69,7 +69,33 @@ class TasksCog(commands.Cog):
                 except Exception as e:
                     self.console.print_exception(show_locals=True)
                     pass
-    
+    async def build_state_field(self, state_name, races):
+        # Find the race for the given state
+        state_race = next((race for race in races if race['top_reporting_unit']['name'].lower() == state_name), None)
+        if not state_race:
+            return None  # Return None if the state is not found in races data
+
+        # Calculate the total expected votes and each candidate's votes
+        total_votes = state_race['top_reporting_unit']['total_expected_vote']
+        trump_votes = state_race['top_reporting_unit']['candidates'][0]['votes']['total']
+        harris_votes = state_race['top_reporting_unit']['candidates'][1]['votes']['total']
+        
+        # Calculate the vote percentages for each candidate
+        trump_percent = (trump_votes / total_votes) * 100 if total_votes > 0 else 0
+        harris_percent = (harris_votes / total_votes) * 100 if total_votes > 0 else 0
+        counted_percent = trump_percent + harris_percent
+        leftover_percent = 100 - counted_percent
+
+        # Create the field data as a dictionary
+        field_name = f"__**{state_name}**__"
+        field_value = (
+            f"**DEM**: {harris_percent:.2f}%\n"
+            f"**GOP**: {trump_percent:.2f}%\n"
+            f"**Remaining**: {leftover_percent:.2f}%"
+        )
+        
+        # Return as a tuple that can be directly used with embed.add_field
+        return field_name, field_value
 
     @tasks.loop(seconds=300)
     async def basic_vote_task(self):
@@ -142,33 +168,7 @@ class TasksCog(commands.Cog):
         # if fields > 25:
         #     await p_channel.send(embed=embed2)
 
-    async def build_state_field(self, state_name, races):
-        # Find the race for the given state
-        state_race = next((race for race in races if race['top_reporting_unit']['name'].lower() == state_name), None)
-        if not state_race:
-            return None  # Return None if the state is not found in races data
 
-        # Calculate the total expected votes and each candidate's votes
-        total_votes = state_race['top_reporting_unit']['total_expected_vote']
-        trump_votes = state_race['top_reporting_unit']['candidates'][0]['votes']['total']
-        harris_votes = state_race['top_reporting_unit']['candidates'][1]['votes']['total']
-        
-        # Calculate the vote percentages for each candidate
-        trump_percent = (trump_votes / total_votes) * 100 if total_votes > 0 else 0
-        harris_percent = (harris_votes / total_votes) * 100 if total_votes > 0 else 0
-        counted_percent = trump_percent + harris_percent
-        leftover_percent = 100 - counted_percent
-
-        # Create the field data as a dictionary
-        field_name = f"__**{state_name}**__"
-        field_value = (
-            f"**DEM**: {harris_percent:.2f}%\n"
-            f"**GOP**: {trump_percent:.2f}%\n"
-            f"**Remaining**: {leftover_percent:.2f}%"
-        )
-        
-        # Return as a tuple that can be directly used with embed.add_field
-        return field_name, field_value
 
 
 
