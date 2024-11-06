@@ -81,7 +81,7 @@ class TasksCog(commands.Cog):
         races = results['races']
         embed = discord.Embed(title="Current Votes")
         total_total_votes = results['partyControlData']['results'][0]['offices']['P']['votes']
-        total_trump_votes = results['partyControlData']['results'][0]['offices']['P']['party_balance']['REP']['votes']
+        total_trump_votes = results['partyControlData']['results'][0]['offices']['P']['party_balance']['GOP']['votes']
         total_harris_votes = results['partyControlData']['results'][0]['offices']['P']['party_balance']['DEM']['votes']
         embed.add_field(name="**TOTALS**", value=f"H: {(total_harris_votes/total_total_votes)*100} | T: {(total_trump_votes/total_total_votes)*100}")
         for race in races:
