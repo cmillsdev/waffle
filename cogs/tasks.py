@@ -83,7 +83,7 @@ class TasksCog(commands.Cog):
         total_total_votes = results['partyControlData']['results'][0]['offices']['P']['votes']
         total_trump_votes = results['partyControlData']['results'][0]['offices']['P']['party_balance']['GOP']['votes']
         total_harris_votes = results['partyControlData']['results'][0]['offices']['P']['party_balance']['DEM']['votes']
-        embed.add_field(name="**TOTALS**", value=f"H: {(total_harris_votes/total_total_votes)*100} | T: {(total_trump_votes/total_total_votes)*100}")
+        embed.add_field(name="**TOTALS**", value=f"H: {((total_harris_votes/total_total_votes)*100):.2f} | T: {((total_trump_votes/total_total_votes)*100):.2f}", inline=False)
         for race in races:
             state_name = race['top_reporting_unit']['name']
             total_votes = race['top_reporting_unit']['total_expected_vote']
