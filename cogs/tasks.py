@@ -77,7 +77,7 @@ class TasksCog(commands.Cog):
         async with httpx.AsyncClient() as resp:
             results = await resp.get(URL)
         results = results.json()
-
+        results_msg = ''
         races = results['races']
         embed = discord.Embed(title="Current Votes")
         total_total_votes = results['partyControlData']['results'][0]['offices']['P']['votes']
