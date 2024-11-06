@@ -118,9 +118,9 @@ class TasksCog(commands.Cog):
             #         embed2.add_field(name=f"{state_name}({lead_notifier})", value=f"**T**: {trump_percent:.2f}% | **H**: {harris_percent:.2f}%\n*Expctd*: {leftover_percent:.2f}%")
         #embed.add_field(name="**TOTALS**", value=f"**H**: {((total_harris_votes/total_total_votes)*100):.2f} | **T**: {((total_trump_votes/total_total_votes)*100):.2f}\n*States*: **H|T**: {dem_leads}|{gop_leads}", inline=False)
         pennsyl = races[42]
-        total_votes = race['top_reporting_unit']['total_expected_vote']
-        trump_votes = race['top_reporting_unit']['candidates'][0]['votes']['total']
-        harris_votes = race['top_reporting_unit']['candidates'][1]['votes']['total']
+        total_votes = pennsyl['top_reporting_unit']['total_expected_vote']
+        trump_votes = pennsyl['top_reporting_unit']['candidates'][0]['votes']['total']
+        harris_votes = pennsyl['top_reporting_unit']['candidates'][1]['votes']['total']
         trump_percent = (trump_votes / total_votes) * 100
         harris_percent = (harris_votes / total_votes) * 100
         counted_percent = trump_percent + harris_percent
