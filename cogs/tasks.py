@@ -69,10 +69,10 @@ class TasksCog(commands.Cog):
                     pass
         
     @tasks.loop(seconds=300)
-    def basic_vote_task(self):
+    async def basic_vote_task(self):
         URL = "https://static01.nyt.com/elections-assets/pages/data/2024-11-05/results-president.json"
         p_channel = await self.bot.fetch_channel('1263616237603393556')
-        results = requests.get(URL).json()
+        results = await requests.get(URL).json()
 
         races = results['races']
         embed = discord.Embed(title="Current Votes")
