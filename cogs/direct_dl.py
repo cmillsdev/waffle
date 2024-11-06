@@ -114,7 +114,7 @@ class DirectDLCog(commands.Cog):
                     # Step 9: Clean up the local files asynchronously
 
                 await self.delete_local_file(video_filename)
-                await self.delete_local_file(compressed_video)
+                await self.delete_local_file(compressed_video_filename)
 
             except Exception as e:
                 print(f"Error processing TikTok video: {str(e)}")

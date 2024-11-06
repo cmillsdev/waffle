@@ -67,6 +67,28 @@ class TasksCog(commands.Cog):
                 except Exception as e:
                     self.console.print_exception(show_locals=True)
                     pass
+        
+    @tasks.loop(seconds=300)
+    def basic_vote_task(self):
+        URL = "https://static01.nyt.com/elections-assets/pages/data/2024-11-05/results-president.json"
+        p_channel = await self.bot.fetch_channel('1263616237603393556')
+        results = requests.get(URL).json()
+
+        races = results['races']
+        embed = discord.Embed(title="Current Votes")
+        for race in races:
+            state_name = race['top_reporting_unit']['name']
+            trump_votes = race['top_reporting_unit']['candidates'][0]['votes']['total']
+            harris_votes = race['top_reporting_unit']['candidates'][1]['votes']['total']
+
+            if trump_votes != 0 and harris_votes != 0:
+                embed.add_field(name=state_name, value=f"T: {trump_votes} | H: {harris_votes}")
+
+        await p_channel.send(embed=embed)
+
+        
+
+
 
 async def setup(bot):
     await bot.add_cog(TasksCog(bot))
