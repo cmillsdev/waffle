@@ -171,7 +171,7 @@ class DebridCog(commands.Cog):
                 else:
                     magnet_responses = self.alldebrid.upload_magnets(yar.build_magnet_list(picks, results))
 
-                    ready_list = build_ready_list(magnet_responses['data']['magnets'])
+                    ready_list = yar.build_ready_list(magnet_responses['data']['magnets'])
 
                     status_embed = helpers.embed.status_embed(ready_list)
                     await results_embed.edit(embeds=status_embed)
