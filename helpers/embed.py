@@ -153,7 +153,7 @@ def torrent_results(results):
     embed = Embed()
     x = 0
     for torrent in results:
-        result_value = f"Seeders: {torrent['seeders']} | Leechers: {torrent['leechers']} | Size: {torrent['size']}"
+        result_value = f"Seeders: {torrent['seeders']} | Leechers: {torrent['leechers']} | Size: {torrent['size_in_bytes']}"
         embed.add_field(
             name=f"{x+1}. {torrent['title']}",
             value=result_value,
