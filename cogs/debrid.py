@@ -13,7 +13,7 @@ import helpers.embed
 import strings.urls as Urls
 import helpers.yar as yar
 
-def pick_check(m):
+def pick_check(m, ctx):
     return m.author == ctx.author and m.content.startswith(
         ("!pick", "!Pick", "!search")
     )
@@ -162,7 +162,7 @@ class DebridCog(commands.Cog):
             e = await ctx.reply(embed=results_embed)
 
             try:
-                msg = await self.bot.wait_for("message", check=pick_check, timeout=60)
+                msg = await self.bot.wait_for("message", check=pick_check(ctx=ctx), timeout=60)
 
                 picks = yar.eval_pick(msg.content)
                 
