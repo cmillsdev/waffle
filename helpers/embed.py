@@ -2,7 +2,7 @@ from discord import Embed
 # from hurry.filesize import size
 from helpers.utils import percentage, size
 from strings.link_msg import get_link_msg
-from config import DEBRID_WEBDAV
+from config import DEBRID_WEBDAV, DL_CHANNEL
 from urllib.parse import quote
 
 def fortnite(stats):
@@ -121,7 +121,7 @@ def debrid_status(all_status):
         )
     return embed
 
-def download_ready(author, magnet, link=None):
+def download_ready_from_queue(author, magnet, link=None):
     embed = Embed(description=f"<@{author}>")
     if link is None:
         link = f"{DEBRID_WEBDAV}magnets/{quote(magnet)}/"
@@ -130,6 +130,24 @@ def download_ready(author, magnet, link=None):
         value=f"[{get_link_msg()}]({link})",
     )
     return embed
+
+def download_ready(author, magnets, link=None):
+    embed = Embed(description=f"<@{author}>")
+    for magnet in magnets:
+        if link is None:
+            link = f"{DEBRID_WEBDAV}magnets/{quote(magnet)}/"
+        embed.add_field(
+            name=f"{magnet}",
+            value=f"[{get_link_msg()}]({link})",
+        )
+    return embed
+
+def status_embed(ready_list):
+    embed = Embed()
+    for magnet in ready_list['ready']:
+        embed.add_field(name=x, value=f'Sent to <#{config.DL_CHANNEL}>')
+    for magnet in ready_list['not_ready']:
+        embed.add_field(name=x, value=f'Not ready, added to queue.')
 
 def torrent_results(results):
     embed = Embed()

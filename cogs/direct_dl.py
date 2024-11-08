@@ -10,16 +10,18 @@ from discord.ext import commands
 import time
 import socketio
 
+
 class DirectDLCog(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.download_message = None
         self.sio = socketio.AsyncClient()
-        self.last_update_time = 0 
+        self.last_update_time = 0
         self.update_interval = 2
         self.updating = False
 
         self.bot.loop.create_task(self.connect_to_socket())
+
     async def connect_to_socket(self):
         try:
             await self.sio.connect("http://127.0.0.1:42069")
@@ -31,39 +33,50 @@ class DirectDLCog(commands.Cog):
     async def download_tiktok_video(self, tiktok_url):
         try:
             ydl_opts = {
-                'outtmpl': 'tiktok_video.%(ext)s',  # Save as tiktok_video.mp4
-                'format': 'bestvideo+bestaudio/best',
-                'final_ext': 'mp4'
+                "outtmpl": "tiktok_video.%(ext)s",  # Save as tiktok_video.mp4
+                "format": "bestvideo+bestaudio/best",
+                "final_ext": "mp4",
             }
             loop = asyncio.get_event_loop()
             with yt_dlp.YoutubeDL(ydl_opts) as ydl:
                 # Use asyncio to avoid blocking
                 await loop.run_in_executor(None, ydl.download, [tiktok_url])
-            video_filename = 'tiktok_video.mp4'
-            converted_video_filename = 'tiktok_video.webm'  # Make sure the file is saved as mp4
+            video_filename = "tiktok_video.mp4"
+            converted_video_filename = (
+                "tiktok_video.webm"  # Make sure the file is saved as mp4
+            )
             return video_filename
         except Exception as e:
             raise Exception(f"Error downloading TikTok video: {str(e)}")
-    
+
     # Step 2: Make the video compression function async-compatible
     async def compress_video(self, input_file, output_file):
         try:
             file_size_mb = os.path.getsize(input_file) / (1024 * 1024)
             print(f"Original file size: {file_size_mb:.2f} MB")
-            
+
             if file_size_mb <= 15:
                 return input_file
-            
+
             ffmpeg_command = [
-                "ffmpeg", "-i", input_file,
-		        "-c:v", "libvpx",
-                "-vf", "scale=-2:720",  # Rescale to max height of 720 while keeping aspect ratio
-                "-b:v", "1M",  # Set video bitrate to 1Mbps for compression
-		        "-c:a", "libvorbis",
-                "-b:a", "128k",  # Set audio bitrate to 128kbps
-                "-maxrate", "1M",  # Limit max bitrate
-                "-bufsize", "2M",  # Buffer size
-                output_file
+                "ffmpeg",
+                "-i",
+                input_file,
+                "-c:v",
+                "libvpx",
+                "-vf",
+                "scale=-2:720",  # Rescale to max height of 720 while keeping aspect ratio
+                "-b:v",
+                "1M",  # Set video bitrate to 1Mbps for compression
+                "-c:a",
+                "libvorbis",
+                "-b:a",
+                "128k",  # Set audio bitrate to 128kbps
+                "-maxrate",
+                "1M",  # Limit max bitrate
+                "-bufsize",
+                "2M",  # Buffer size
+                output_file,
             ]
 
             # Use asyncio to run the ffmpeg subprocess in the background
@@ -72,14 +85,16 @@ class DirectDLCog(commands.Cog):
 
             compressed_file_size_mb = os.path.getsize(output_file) / (1024 * 1024)
             print(f"Compressed file size: {compressed_file_size_mb:.2f} MB")
-            
+
             if compressed_file_size_mb > 15:
-                raise Exception("Compression failed to reduce the file size under 15MB.")
-            
+                raise Exception(
+                    "Compression failed to reduce the file size under 15MB."
+                )
+
             return output_file
         except Exception as e:
             raise Exception(f"Error compressing video: {str(e)}")
-    
+
     # Step 4: File deletion should be async-compatible
     async def delete_local_file(self, file_path):
         if os.path.exists(file_path):
@@ -98,20 +113,22 @@ class DirectDLCog(commands.Cog):
             try:
                 # Step 6: Download the TikTok video asynchronously
                 video_filename = await self.download_tiktok_video(link)
-                    
+
                 # Step 7: Compress the video to fit under Discord's limit
-                compressed_video_filename = 'compressed_tiktok_video.webm'
-                compressed_video = await self.compress_video(video_filename, compressed_video_filename)
-
-                # Step 8: Prepare the video for Discord upload
-                file = discord.File(compressed_video, filename=os.path.basename(compressed_video))
-
-                await message.delete()
-                await message.channel.send(
-                    f"<@{message.author.id}>\n", file=file
+                compressed_video_filename = "compressed_tiktok_video.webm"
+                compressed_video = await self.compress_video(
+                    video_filename, compressed_video_filename
                 )
 
-                    # Step 9: Clean up the local files asynchronously
+                # Step 8: Prepare the video for Discord upload
+                file = discord.File(
+                    compressed_video, filename=os.path.basename(compressed_video)
+                )
+
+                await message.delete()
+                await message.channel.send(f"<@{message.author.id}>\n", file=file)
+
+                # Step 9: Clean up the local files asynchronously
 
                 await self.delete_local_file(video_filename)
                 await self.delete_local_file(compressed_video_filename)
@@ -130,22 +147,25 @@ class DirectDLCog(commands.Cog):
                     self.updating = False
             elif done:
                 await self.download_message.edit(content=message)
-    
+
     async def call_backs(self):
         @self.sio.event
         async def connect():
-            print('Connected to the box')
+            print("Connected to the box")
+
         @self.sio.event
         async def progress_update(data):
-            progress = data.get('progress')
+            progress = data.get("progress")
             await self.update_message(progress)
+
         @self.sio.event
         async def download_complete(data):
-            message = data.get('message')
+            message = data.get("message")
             await self.update_message(message, done=True)
+
         @self.sio.event
         async def download_error(data):
-            error_message = data.get('message')
+            error_message = data.get("message")
             await self.update_message(error_message)
 
     @commands.command(name="mdl", description="upload music to music server")
@@ -153,11 +173,11 @@ class DirectDLCog(commands.Cog):
         await self.call_backs()
         self.download_message = await ctx.reply("Starting download...")
 
-        await self.sio.emit('start_download', {'url': url, 'quality': 'best'})
+        await self.sio.emit("start_download", {"url": url, "quality": "best"})
 
         if not self.sio.connected:
             await self.download_message.edit(content="Failed to connect to socket")
-       
+
 
 async def setup(bot):
     await bot.add_cog(DirectDLCog(bot))

@@ -56,7 +56,7 @@ class TasksCog(commands.Cog):
                                     f.write(f"{i[0]},{i[1]}\n")
                         print(f"Magnet ID {dl_id} removed from the queue.")
                         filename = status["data"]["magnets"]["filename"]
-                        embed = helpers.embed.download_ready(user_id, filename)
+                        embed = helpers.embed.download_ready_from_queue(user_id, filename)
                         print(f"Removed: {dl_id}")
                         dl_channel = await self.bot.fetch_channel(config.DL_CHANNEL)
                         await dl_channel.send(embed=embed)
@@ -68,33 +68,6 @@ class TasksCog(commands.Cog):
                 except Exception as e:
                     self.console.print_exception(show_locals=True)
                     pass
-    async def build_state_field(self, state_name, races):
-        # Find the race for the given state
-        state_race = next((race for race in races if race['top_reporting_unit']['name'].lower() == state_name), None)
-        if not state_race:
-            return None  # Return None if the state is not found in races data
-
-        # Calculate the total expected votes and each candidate's votes
-        total_votes = state_race['top_reporting_unit']['total_expected_vote']
-        trump_votes = state_race['top_reporting_unit']['candidates'][0]['votes']['total']
-        harris_votes = state_race['top_reporting_unit']['candidates'][1]['votes']['total']
-        
-        # Calculate the vote percentages for each candidate
-        trump_percent = (trump_votes / total_votes) * 100 if total_votes > 0 else 0
-        harris_percent = (harris_votes / total_votes) * 100 if total_votes > 0 else 0
-        counted_percent = trump_percent + harris_percent
-        leftover_percent = 100 - counted_percent
-
-        # Create the field data as a dictionary
-        field_name = f"__**{state_race['top_reporting_unit']['name']}**__"
-        field_value = (
-            f"**DEM**: {harris_percent:.2f}%\n"
-            f"**GOP**: {trump_percent:.2f}%\n"
-            f"**Remaining**: {leftover_percent:.2f}%"
-        )
-        
-        # Return as a tuple that can be directly used with embed.add_field
-        return field_name, field_value
-
+                
 async def setup(bot):
     await bot.add_cog(TasksCog(bot))

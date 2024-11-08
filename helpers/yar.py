@@ -1,60 +1,57 @@
-from bs4 import BeautifulSoup as bs
 import httpx
 
-def scrape_btsearch(q):
-    url = f"https://bitsearch.to/search?q={q.replace(' ', '+')}&sort=seeders"
+def search_magnets(q):
+    url = f"http://192.168.1.238:4000/api/search/{q}"
 
     with httpx.Client() as client:
         response = client.get(url, timeout=60)
 
-    soup = bs(response.text, "html.parser")
-    results = []
-    for item in soup.select('.card.search-result.my-2'):
-        # Failsafe for magnet link
-        magnet_link_element = item.select_one('.dl-magnet')
-        if not magnet_link_element:
-            continue
-        magnet_link = magnet_link_element['href']
+    api_results = response.json()['data']
 
-        # Failsafe for title
-        title_element = item.select_one('.title a')
-        title = title_element.text.strip() if title_element else "Title not found"
+    # Keys to remove from each result
+    keys_to_remove = {'canonical_url', 'category', 'description', 'id', 'magnet_hash', 'published_at'}
 
-        # Failsafe for link
-        link = title_element['href'] if title_element else "Link not found"
+    # Filter out unwanted keys for each item in the list
+    filtered_results = [
+        {key: value for key, value in item.items() if key not in keys_to_remove}
+        for item in api_results
+    ]
 
-        # Failsafe for category
-        category_element = item.select_one('.category')
-        category = category_element.text.strip() if category_element else "Category not found"
+    # Sort the filtered results by 'seeders' in descending order
+    sorted_results = sorted(filtered_results, key=lambda item: item['seeders'], reverse=True)
 
-        # Failsafe for size
-        size_element = item.select_one('.stats img[alt="Size"]')
-        size = size_element.parent.text.strip() if size_element and size_element.parent else "Size not found"
+    return sorted_results
 
-        # Failsafe for seeders
-        seeders_element = item.select_one('.stats img[alt="Seeder"]')
-        seeders = seeders_element.parent.text.strip() if seeders_element and seeders_element.parent else "Seeders not found"
 
-        # Failsafe for leechers
-        leechers_element = item.select_one('.stats img[alt="Leecher"]')
-        leechers = leechers_element.parent.text.strip() if leechers_element and leechers_element.parent else "Leechers not found"
+def eval_pick(pick):
+    # pick will be one number, a range of numbers('1-5'), or a list of numbers('1,2,3,4,5')
+    # need to return a list of numbers
+    pick = pick.lower().replace('!pick', '').strip()
+    pick_list = []
+    if pick.isdigit():
+        pick_list.append(int(pick.strip()) - 1)
+    elif "-" in pick:
+        start, end = pick.split("-")
+        pick_list.extend(range(int(start.strip()) - 1, int(end.strip())))
+    elif "," in pick:
+        pick_list.extend([int(x) - 1 for x in pick.replace(" ", "").split(",")])
+    for pick in pick_list:
+        if pick < 0 or pick > 10:
+            return False
+    return pick_list
 
-        # Failsafe for date
-        date_element = item.select_one('.stats img[alt="Date"]')
-        date = date_element.parent.text.strip() if date_element and date_element.parent else "Date not found"
+def build_magnet_list(picks, results):
+    magnets = []
+    for pick in picks:
+        magnets.append(magnets[pick]['magnet_url'])
 
-        results.append({
-            'title': title,
-            'link': link,
-            'category': category,
-            'size': size,
-            'seeders': seeders,
-            'leechers': leechers,
-            'date': date,
-            'magnet_link': magnet_link
-        })
+    return magnets
 
-        if len(results) >= 10:
-            break
-
-    return results
+def build_ready_list(magnet_responses):
+    ready_list = {"ready":[], "not_ready": []}
+    for magnet in magnet_responses:
+        if magnet['ready']:
+            ready_list['ready'].append(magnet['name'])
+        else:
+            ready_list['not_ready'].append(magnet['name'])
+    return ready_list

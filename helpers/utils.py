@@ -42,16 +42,3 @@ def size(bytes_size):
         if bytes_size < 1024:
             return f"{bytes_size:.2f} {unit}"
         bytes_size /= 1024
-
-def eval_pick(pick):
-    # pick will be one number, a range of numbers('1-5'), or a list of numbers('1,2,3,4,5')
-    # need to return a list of numbers
-    pick_list = []
-    if pick.isdigit():
-        pick_list.append(int(pick.strip()) - 1)
-    elif "-" in pick:
-        start, end = pick.split("-")
-        pick_list.extend(range(int(start.strip()) - 1, int(end.strip())))
-    elif "," in pick:
-        pick_list.extend([int(x) - 1 for x in pick.replace(" ", "").split(",")])
-    return pick_list
