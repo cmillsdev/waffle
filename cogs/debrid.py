@@ -148,12 +148,12 @@ class DebridCog(commands.Cog):
     async def search(self, ctx, *, query: str):  # type: ignore
         try:
             results = yar.search_magnets(query)
-
+            results = results[:10]
             if "error" in results:
                 await ctx.send(f"Error: {results['error']}")
                 return
 
-            results_embed = helpers.embed.torrent_results(results[:10])
+            results_embed = helpers.embed.torrent_results(results)
 
             e = await ctx.reply(embed=results_embed)
 

@@ -43,7 +43,7 @@ def eval_pick(pick):
 def build_magnet_list(picks, results):
     magnets = []
     for pick in picks:
-        magnets.append(magnets[pick]['magnet_url'])
+        magnets.append(results[pick]['magnet_url'])
 
     return magnets
 
