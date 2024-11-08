@@ -145,9 +145,9 @@ def download_ready(author, magnets, link=None):
 def status_embed(ready_list):
     embed = Embed()
     for magnet in ready_list['ready']:
-        embed.add_field(name=x, value=f'Sent to <#{config.DL_CHANNEL}>')
+        embed.add_field(name=magnet, value=f'Sent to <#{config.DL_CHANNEL}>')
     for magnet in ready_list['not_ready']:
-        embed.add_field(name=x, value=f'Not ready, added to queue.')
+        embed.add_field(name=magnet, value=f'Not ready, added to queue.')
 
 def torrent_results(results):
     embed = Embed()
