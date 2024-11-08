@@ -182,11 +182,12 @@ class DebridCog(commands.Cog):
                         await dl_channel.send(embed=embed)
                     else:
                         if ready_list['not_ready']:
-                            with open("queue.txt", "a") as f:
-                                for magnet in ready_list['not_ready']:
-                                    f.write(
-                                        f"{magnet},{ctx.author.id}\n"
-                                    )
+                            for magnet in magnet_responses:
+                                if not magnet['status']:
+                                    with open("queue.txt", "a") as f:
+                                        f.write(
+                                            f"{magnet['id']},{ctx.author.id}\n"
+                                        )
             except asyncio.TimeoutError:
                 # await ctx.send("TOO SLOW", mention_author=False)
                 # add reaction to previously sent em_result embed
