@@ -162,7 +162,7 @@ class DebridCog(commands.Cog):
                     return m.author == ctx.author and m.content.startswith(
                         ("!pick", "!Pick", "!search")
                     )
-                msg = await self.bot.wait_for("message", check=pick_check(), timeout=60)
+                msg = await self.bot.wait_for("message", check=pick_check, timeout=60)
 
                 picks = yar.eval_pick(msg.content)
                 
