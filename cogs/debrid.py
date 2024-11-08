@@ -200,6 +200,7 @@ class DebridCog(commands.Cog):
                 description=f"TRY AGAIN\n```python\n{str(e)}```",
                 color=discord.Color.red(),
             )
+            self.console.print_exception(show_locals=True)
             await ctx.send(embed=error_embed)  # type: ignore
 
 
