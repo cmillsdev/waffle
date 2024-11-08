@@ -155,7 +155,7 @@ class DebridCog(commands.Cog):
 
             results_embed = helpers.embed.torrent_results(results)
 
-            e = await ctx.reply(embed=results_embed)
+            search_message = await ctx.reply(embed=results_embed)
 
             try:
                 def pick_check(m):
@@ -167,14 +167,14 @@ class DebridCog(commands.Cog):
                 picks = yar.eval_pick(msg.content)
                 
                 if not picks:
-                    await e.add_reaction("❌")
+                    await search_message.add_reaction("❌")
                 else:
                     magnet_responses = self.alldebrid.upload_magnets(yar.build_magnet_list(picks, results))
 
                     ready_list = yar.build_ready_list(magnet_responses['data']['magnets'])
 
                     status_embed = helpers.embed.status_embed(ready_list)
-                    await results_embed.edit(embeds=status_embed)
+                    await search_message.edit(embeds=status_embed)
 
                     if ready_list['ready']:
                         embed = helpers.embed.download_ready(ctx.author.id, ready_list)
@@ -190,7 +190,7 @@ class DebridCog(commands.Cog):
             except asyncio.TimeoutError:
                 # await ctx.send("TOO SLOW", mention_author=False)
                 # add reaction to previously sent em_result embed
-                await e.add_reaction("❌")
+                await search_message.add_reaction("❌")
                 # await ctx.send("something broke lol")
             except Exception as e:
                 self.console.print_exception(show_locals=True)
