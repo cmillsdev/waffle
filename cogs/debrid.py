@@ -157,7 +157,7 @@ class DebridCog(commands.Cog):
                 await ctx.send(f"Error: {results['error']}")
                 return
 
-            results_embed = helpers.embed.torrent_results(results)
+            results_embed = helpers.embed.torrent_results(results[:10])
 
             e = await ctx.reply(embed=results_embed)
 
