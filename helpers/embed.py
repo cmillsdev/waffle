@@ -133,7 +133,7 @@ def download_ready_from_queue(author, magnet, link=None):
 
 def download_ready(author, magnets, link=None):
     embed = Embed(description=f"<@{author}>")
-    for magnet in magnets:
+    for magnet in magnets['ready']:
         if link is None:
             link = f"{DEBRID_WEBDAV}magnets/{quote(magnet)}/"
         embed.add_field(
