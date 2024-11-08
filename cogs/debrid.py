@@ -174,7 +174,7 @@ class DebridCog(commands.Cog):
                     ready_list = yar.build_ready_list(magnet_responses['data']['magnets'])
 
                     status_embed = helpers.embed.status_embed(ready_list)
-                    await search_message.edit(embeds=status_embed)
+                    await search_message.edit(embed=status_embed)
 
                     if ready_list['ready']:
                         embed = helpers.embed.download_ready(ctx.author.id, ready_list)
