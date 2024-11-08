@@ -159,7 +159,7 @@ class DebridCog(commands.Cog):
 
             results_embed = helpers.embed.torrent_results(results)
 
-            e = await ctx.reply(embed=embed)
+            e = await ctx.reply(embed=results_embed)
 
             try:
                 msg = await self.bot.wait_for("message", check=pick_check, timeout=60)
