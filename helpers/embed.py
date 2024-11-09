@@ -138,17 +138,17 @@ def download_ready(author, magnets, link=None):
             link = f"{DEBRID_WEBDAV}magnets/{quote(magnet)}/"
         embed.add_field(
             name=f"{magnet}",
-            value=f"[{get_link_msg()}]({link})",
+            value=f"[{get_link_msg()}]({link})", inline=False
         )
     return embed
 
 def status_embed(ready_list):
     embed = Embed()
     for magnet in ready_list['ready']:
-        embed.add_field(name=magnet, value=f'Sent to <#{DL_CHANNEL}>')
+        embed.add_field(name=magnet, value=f'Sent to <#{DL_CHANNEL}>', inline=False)
     for magnet in ready_list['not_ready']:
         print(magnet)
-        embed.add_field(name=magnet, value=f'Not ready, added to queue.')
+        embed.add_field(name=magnet, value=f'Not ready, added to queue.',inline=False)
     return embed
 
 def torrent_results(results):
