@@ -1,6 +1,5 @@
 import httpx
 
-
 def filter_result(item, keys_to_remove, max_seeders=16777215):
     # Exclude items with 'seeders' set to max_seeders and remove unwanted keys
     if item.get('seeders') == max_seeders:
