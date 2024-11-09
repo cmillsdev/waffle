@@ -176,7 +176,7 @@ class DebridCog(commands.Cog):
                         if download['ready']:
                             ready_list["ready"].append(download['name'])
                         else:
-                            ready_list['not_ready'].append(download['name'])
+                            ready_list['not_ready'].append({"name":download['name'], "id":download['id']})
 
                     status_embed = helpers.embed.status_embed(ready_list)
                     await search_message.edit(embed=status_embed)
@@ -186,13 +186,11 @@ class DebridCog(commands.Cog):
                         dl_channel = await self.bot.fetch_channel(config.DL_CHANNEL)
                         await dl_channel.send(embed=embed)
                     else:
-                        if ready_list['not_ready']:
-                            for magnet in magnet_responses:
-                                if not magnet['status']:
-                                    with open("queue.txt", "a") as f:
-                                        f.write(
-                                            f"{magnet['id']},{ctx.author.id}\n"
-                                        )
+                        for download in ready_list['not_ready']:
+                            with open("queue.txt", "a") as f:
+                                f.write(
+                                    f"{download['id']},{ctx.author.id}\n"
+                                )
             except asyncio.TimeoutError:
                 # await ctx.send("TOO SLOW", mention_author=False)
                 # add reaction to previously sent em_result embed
