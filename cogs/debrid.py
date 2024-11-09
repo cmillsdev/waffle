@@ -185,7 +185,7 @@ class DebridCog(commands.Cog):
                         embed = helpers.embed.download_ready(ctx.author.id, ready_list)
                         dl_channel = await self.bot.fetch_channel(config.DL_CHANNEL)
                         await dl_channel.send(embed=embed)
-                    else:
+                    if ready_list['not_ready']
                         for download in ready_list['not_ready']:
                             with open("queue.txt", "a") as f:
                                 f.write(
