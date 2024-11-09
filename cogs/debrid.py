@@ -169,9 +169,14 @@ class DebridCog(commands.Cog):
                 if not picks:
                     await search_message.add_reaction("❌")
                 else:
-                    magnet_responses = self.alldebrid.upload_magnets(yar.build_magnet_list(picks, results))
-
-                    ready_list = yar.build_ready_list(magnet_responses['data']['magnets'])
+                    ready_list = {"ready":[], "not_ready": []}
+                    for magnet_link in (magnets := yar.build_magnet_list(picks, results)):
+                        api_response = self.alldebrid.upload_magnets(magnet_link)
+                        download = api_response['data']['magnets'][0]
+                        if download['ready']:
+                            ready_list["ready"].append(download['name'])
+                        else:
+                            ready_list['not_ready'].append(download['name'])
 
                     status_embed = helpers.embed.status_embed(ready_list)
                     await search_message.edit(embed=status_embed)
