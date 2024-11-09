@@ -96,11 +96,20 @@ class DirectDLCog(commands.Cog):
             raise Exception(f"Error compressing video: {str(e)}")
 
     # Step 4: File deletion should be async-compatible
-    async def delete_local_file(self, file_path):
-        if os.path.exists(file_path):
-            os.remove(file_path)
-        else:
-            print(f"File {file_path} not found, cannot delete.")
+    async def remove_video_files(self):
+        current_dir = os.getcwd()
+
+        # Loop through all files in the current directory
+        for file_name in os.listdir(current_dir):
+            file_path = os.path.join(current_dir, file_name)
+
+            # Check if it's a .webm or .mp4 file and delete it
+            if file_name.endswith('.webm') or file_name.endswith('.mp4'):
+                if os.path.isfile(file_path):  # Confirm it's a file, not a directory
+                    os.remove(file_path)
+                    print(f"Deleted {file_path}")
+                else:
+                    print(f"{file_path} is not a file, skipping.")
 
     # Listener to catch messages containing TikTok URLs
     @commands.Cog.listener()
@@ -130,8 +139,7 @@ class DirectDLCog(commands.Cog):
 
                 # Step 9: Clean up the local files asynchronously
                 # there should be no mp4/webm in the folder
-                await self.delete_local_file('*.mp4')
-                await self.delete_local_file('*.webm')
+                await self.remove_video_files()
 
             except Exception as e:
                 print(f"Error processing TikTok video: {str(e)}")
