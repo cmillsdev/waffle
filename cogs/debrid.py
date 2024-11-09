@@ -148,7 +148,7 @@ class DebridCog(commands.Cog):
     async def search(self, ctx, *, query: str):  # type: ignore
         try:
             results = yar.search_magnets(query)
-            results = results[:10]
+
             if "error" in results:
                 await ctx.send(f"Error: {results['error']}")
                 return

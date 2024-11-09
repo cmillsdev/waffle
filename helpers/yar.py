@@ -1,5 +1,12 @@
 import httpx
 
+
+def filter_result(item, keys_to_remove, max_seeders=16777215):
+    # Exclude items with 'seeders' set to max_seeders and remove unwanted keys
+    if item.get('seeders') == max_seeders:
+        return None
+    return {key: value for key, value in item.items() if key not in keys_to_remove}
+
 def search_magnets(q):
     url = f"http://192.168.1.238:4000/api/search/{q}"
 
@@ -8,19 +15,18 @@ def search_magnets(q):
 
     api_results = response.json()['data']
 
-    # Keys to remove from each result
     keys_to_remove = {'canonical_url', 'category', 'description', 'id', 'magnet_hash', 'published_at'}
 
-    # Filter out unwanted keys for each item in the list
+    # Filter and transform each result, removing any with 'seeders' == 16777215
     filtered_results = [
-        {key: value for key, value in item.items() if key not in keys_to_remove}
-        for item in api_results
+        filtered_item for item in api_results 
+        if (filtered_item := filter_result(item, keys_to_remove)) is not None
     ]
 
     # Sort the filtered results by 'seeders' in descending order
     sorted_results = sorted(filtered_results, key=lambda item: item['seeders'], reverse=True)
 
-    return sorted_results
+    return sorted_results[:10] # limited to ten results
 
 
 def eval_pick(pick):
