@@ -129,9 +129,9 @@ class DirectDLCog(commands.Cog):
                 await message.channel.send(f"<@{message.author.id}>\n", file=file)
 
                 # Step 9: Clean up the local files asynchronously
-
-                await self.delete_local_file(video_filename)
-                await self.delete_local_file(compressed_video_filename)
+                # there should be no mp4/webm in the folder
+                await self.delete_local_file('*.mp4')
+                await self.delete_local_file('*.webm')
 
             except Exception as e:
                 print(f"Error processing TikTok video: {str(e)}")
