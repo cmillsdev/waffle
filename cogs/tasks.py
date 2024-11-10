@@ -29,7 +29,7 @@ class TasksCog(commands.Cog):
                         status = self.alldebrid.get_magnet_status(dl_id)
                 except Exception as e:
                     print(f"Error getting status for magnet ID {dl_id}: {e}")
-                    self.console.print_exception(show_locals=True)
+                    self.console.print("Magnet ID not found, deleting.")
                     with open("queue.txt", "w") as f:
                             for i in queue:
                                 if i[0] != dl_id:  # Write back only the entries that don't match the current dl_id

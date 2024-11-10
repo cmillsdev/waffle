@@ -71,10 +71,8 @@ class DebridCog(commands.Cog):
                 await dl_channel.send(embed=embed)
                 await interaction.followup.send("Download ready and waiting!")
             else:
-                data = [mag[0], "magnet", interaction.user.id, "magnet"]
-                await DB().add_to_queue(data)
-                print(f"{mag[1]} is not ready. Adding to queue.")
-                await interaction.followup.send("It aint ready. Try !stat.")
+                #data = [mag[0], "magnet", interaction.user.id, "magnet"]
+                await interaction.followup.send("It aint ready.")
         else:
             print(f"Invalid link recv'd: {magnet}")
             await interaction.response.send_message("Not a valid magnet link.")
@@ -135,7 +133,7 @@ class DebridCog(commands.Cog):
 
         print(f"M3U List: {files}")
         print(f"File name: {m3u_name}")
-        with open(f"tmp/{m3u_name}", "a") as f:
+        with open(f"tmp/{m3u_name}", "w") as f:
             for file in files:
                 f.write(file)
         await interaction.followup.send(file=discord.File(f"tmp/{m3u_name}"))
