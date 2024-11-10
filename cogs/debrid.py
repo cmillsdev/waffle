@@ -144,9 +144,11 @@ class DebridCog(commands.Cog):
                     for file in files:
                         f.write(file)
             
-            await interaction.followup.send(file=discord.File(f"tmp/{m3u_name}"))
-            os.remove(f"tmp/{m3u_name}")
-            print(f"Sent and removed M3U for {folder_name}.")
+                await interaction.followup.send(file=discord.File(f"tmp/{m3u_name}"))
+                os.remove(f"tmp/{m3u_name}")
+                print(f"Sent and removed M3U for {folder_name}.")
+            else:
+                print("No files in folder/M3U.")
 
         # Start scanning from the root URL
         async def scan_directory(url, parent_name="root"):
