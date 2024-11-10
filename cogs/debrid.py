@@ -115,7 +115,7 @@ class DebridCog(commands.Cog):
     async def m3u_gen(self, interaction: discord.Interaction, url: str):
         await interaction.response.defer(thinking=True)
         print("Generating M3U")
-        exclude_files = ["txt", "../"]
+        exclude_files = ["txt", "../", "srt", "nfo", "jpg", "jpeg", "exe", "rar", "zip"]
         files = []
         async with httpx.AsyncClient() as resp:
             r = await resp.get(url)
