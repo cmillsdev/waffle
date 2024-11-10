@@ -114,31 +114,58 @@ class DebridCog(commands.Cog):
     )
     async def m3u_gen(self, interaction: discord.Interaction, url: str):
         await interaction.response.defer(thinking=True)
-        print("Generating M3U")
-        exclude_files = ["txt", "../", "srt", "nfo", "jpg", "jpeg", "exe", "rar", "zip"]
-        files = []
-        async with httpx.AsyncClient() as resp:
-            r = await resp.get(url)
-        m3u_name = f"{url.split('/')[-2]}.m3u"
-        # m3u_name = m3u_name
-        soup = bs(r, "html.parser")
-        for tag in soup.find_all("a"):
-            if (
-                tag.get("href")[-3:] in exclude_files
-                or tag.get("href") in exclude_files
-            ):
-                continue
+        print("Generating M3U files for each directory.")
+        exclude_files = ["txt", "../", "srt", "nfo", "jpg", "jpeg", "exe", "rar", ]
+        
+        async def fetch_directory_content(url):
+            async with httpx.AsyncClient() as client:
+                response = await client.get(url)
+                return response.text
+        
+        async def generate_m3u_for_directory(base_url, folder_name, folder_url):
+            print(f"Generating M3U for: {folder_name}")
+            m3u_name = f"{folder_name}.m3u"
+            files = []
+            
+            # Fetch and parse the directory content
+            html_content = await fetch_directory_content(folder_url)
+            soup = bs(html_content, "html.parser")
+            
+            # Find all files in this directory, excluding specified types
+            for tag in soup.find_all("a"):
+                href = tag.get("href")
+                if not any(href.endswith(ext) for ext in exclude_files):
+                    if not href.endswith("/"):
+                        files.append(f"{folder_url}{href}\n")
 
-            files.append(f"{url}{tag.get('href')}\n")
+            # Write this folder's file list to its own .m3u file
+            with open(f"tmp/{m3u_name}", "w") as f:
+                for file in files:
+                    f.write(file)
+            
+            await interaction.followup.send(file=discord.File(f"tmp/{m3u_name}"))
+            os.remove(f"tmp/{m3u_name}")
+            print(f"Sent and removed M3U for {folder_name}.")
 
-        print(f"M3U List: {files}")
-        print(f"File name: {m3u_name}")
-        with open(f"tmp/{m3u_name}", "w") as f:
-            for file in files:
-                f.write(file)
-        await interaction.followup.send(file=discord.File(f"tmp/{m3u_name}"))
-        os.remove(f"tmp/{m3u_name}")
-        print("Sent and removed M3U.")
+        # Start scanning from the root URL
+        async def scan_directory(url, parent_name="root"):
+            html_content = await fetch_directory_content(url)
+            soup = bs(html_content, "html.parser")
+            
+            # Process the current directory files and subdirectories
+            await generate_m3u_for_directory(url, parent_name, url)
+            
+            # Check for subdirectories and recursively generate their M3U files
+            for tag in soup.find_all("a"):
+                href = tag.get("href")
+                if href.endswith("/") and href not in exclude_files:
+                    subfolder_name = href.strip("/")
+                    subfolder_url = f"{url}{href}"
+                    await scan_directory(subfolder_url, subfolder_name)
+        
+        # Start the recursive scan from the provided URL
+        await scan_directory(url)
+        print("All M3U files generated and sent.")
 
     @commands.command(
         name="search", description="Search for torrents", brief="Search for torrents"
