@@ -139,9 +139,10 @@ class DebridCog(commands.Cog):
                         files.append(f"{folder_url}{href}\n")
 
             # Write this folder's file list to its own .m3u file
-            with open(f"tmp/{m3u_name}", "w") as f:
-                for file in files:
-                    f.write(file)
+            if files:
+                with open(f"tmp/{m3u_name}", "w") as f:
+                    for file in files:
+                        f.write(file)
             
             await interaction.followup.send(file=discord.File(f"tmp/{m3u_name}"))
             os.remove(f"tmp/{m3u_name}")
