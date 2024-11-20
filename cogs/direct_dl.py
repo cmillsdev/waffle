@@ -114,7 +114,7 @@ class DirectDLCog(commands.Cog):
     # Listener to catch messages containing TikTok URLs
     @commands.Cog.listener()
     async def on_message(self, message):
-        tiktok_url_pattern = r"(https?://(?:www\.)?tiktok\.com/[^\s]+)"
+        tiktok_url_pattern = r"(https?://(?:www\.)?(?:vt\.)?tiktok\.com/[^\s]+)"
         match = re.search(tiktok_url_pattern, message.content)
         if match:
             # Step 5: Use an async method to get the TikTok link
