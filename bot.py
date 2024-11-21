@@ -26,3 +26,12 @@ class Waffle(commands.Bot):
             return
 
         await self.process_commands(message)
+
+    async def httpx_request(self, url, cookies={}):
+        headers = {
+            "User-Agent": "Mozilla/5.0 (X11; Linux x86_64; rv:132.0) Gecko/20100101 Firefox/132.0"
+        }
+        async with https.AsyncClient(url) as client:
+            response = await client.get(url, cookies=cookies, headers=headers)
+
+        return response

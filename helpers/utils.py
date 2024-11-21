@@ -1,5 +1,5 @@
 from datetime import datetime
-
+import httpx
 
 def percentage(curr, total):
     if not (isinstance(curr, (int, float)) and isinstance(total, (int, float))):
