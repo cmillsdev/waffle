@@ -32,7 +32,7 @@ class Waffle(commands.Bot):
         headers = {
             "User-Agent": "Mozilla/5.0 (X11; Linux x86_64; rv:132.0) Gecko/20100101 Firefox/132.0"
         }
-        async with httpx.AsyncClient(url) as client:
+        async with httpx.AsyncClient() as client:
             response = await client.get(url, cookies=cookies, headers=headers)
 
         return response
