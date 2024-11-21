@@ -3,6 +3,7 @@ from discord.ext import commands
 from cogwatch import watch
 from rich import print
 from alldebrid import AllDebrid
+import httpx
 import config
 # MY_GUILD = discord.Object(id=1196061028706951279)
 
