@@ -16,7 +16,7 @@ class MusicLeagueCog(commands.Cog):
         self.music_league_check.start()
 
     @tasks.loop(seconds=62)
-    async def music_league_check():
+    async def music_league_check(self):
         headers = {
             "User-Agent": "Mozilla/5.0 (X11; Linux x86_64; rv:132.0) Gecko/20100101 Firefox/132.0"
         }
