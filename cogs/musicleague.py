@@ -22,7 +22,7 @@ class MusicLeagueCog(commands.Cog):
         }
         pass
 
-    @commands.command(name='mlround', description='get current round')
+    @commands.command(name='fmd', description='get current round')
     async def mlround(self, ctx):
         r = await self.bot.httpx_request(MLROUNDS_URL, cookies=MLCOOKIES)
         soup = bs(r.text, 'lxml')
@@ -64,7 +64,7 @@ class MusicLeagueCog(commands.Cog):
         embed.add_field(name=f'Done:', value=', '.join(sub_status_dic['voted']), inline=False)
         await ctx.reply(embed=embed)
 
-    @commands.command(name='mlstandings', description='Get current standings')
+    @commands.command(name='fmdstanding', description='Get current standings')
     async def mlstandings(self, ctx):
         r = await self.bot.httpx_request(MLSTANDINGS_URL, cookies=MLCOOKIES)
         soup = bs(r.text, 'lxml')
