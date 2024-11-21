@@ -81,9 +81,9 @@ class MusicLeagueCog(commands.Cog):
                 points = int(points_tag.get_text(strip=True))
                 user_data[username] = points
 
-        embed = Embed(title='FUCK ME ~~DEAD~~ STANDING')
+        embed = Embed(title='FUCK ME ~~DEAD~~ STANDING$')
         for count, user in enumerate(user_data.keys(), start=1):
-            embed.add_field(name=f"{count}.{user}", value=user_data[user])
+            embed.add_field(name=f"{count}. {user}", value=user_data[user], inline=False)
 
         await ctx.reply(embed=embed)
 
