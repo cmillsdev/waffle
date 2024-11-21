@@ -90,7 +90,7 @@ class MusicLeagueCog(commands.Cog):
             elif count == 3:
                 award = '✨'
             else:
-                count = ''
+                award = ''
             embed.add_field(name=f"{count}. {user} {award}", value=f"{user_data[user]} points", inline=False)
 
         await ctx.reply(embed=embed)
