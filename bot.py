@@ -30,14 +30,13 @@ class Waffle(commands.Bot):
 
     async def httpx_request(self, url, cookies=None):
         if isinstance(cookies, str):
-            cookie = SimpleCookie()
-            cookie.load(cookies)
-            cookies = {key: morsel.value for key, morsel in cookie.items()}
+            cookie = httpx.Cookies()
+            cookie.set((cookies.keys())[0], (cookies.values())[0], domain='app.musicleague.com')
 
         headers = {
             "User-Agent": "Mozilla/5.0 (X11; Linux x86_64; rv:132.0) Gecko/20100101 Firefox/132.0"
         }
         async with httpx.AsyncClient() as client:
-            response = await client.get(url, cookies=cookies)
+            response = await client.get(url, cookies=cookie)
 
         return response
