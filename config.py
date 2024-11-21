@@ -27,7 +27,7 @@ SPOTIPY_REDIRECT_URI = os.environ["SPOTIPY_REDIRECT_URI"]
 PLAYLIST_URI = os.environ["PLAYLIST_URI"]
 
 #music league
-MLCOOKIE = os.environ["MLCOOKIE"]
+MLCOOKIES = os.environ["MLCOOKIE"]
 IGNORE_CHANNELS = os.environ["IGNORE_CHANNELS"].split(",")
 for i in range(len(IGNORE_CHANNELS)):
     IGNORE_CHANNELS[i] = int(IGNORE_CHANNELS[i])
