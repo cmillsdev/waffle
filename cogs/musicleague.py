@@ -83,7 +83,15 @@ class MusicLeagueCog(commands.Cog):
 
         embed = Embed(title='FUCK ME ~~DEAD~~ STANDING$')
         for count, user in enumerate(user_data.keys(), start=1):
-            embed.add_field(name=f"{count}. {user}", value=user_data[user], inline=False)
+            if count == 1:
+                award = '🌟'
+            elif count == 2:
+                award = '⭐'
+            elif count == 3:
+                award = '✨'
+            else:
+                count = ''
+            embed.add_field(name=f"{count}. {user} {award}", value=f"{user_data[user]} points", inline=False)
 
         await ctx.reply(embed=embed)
 
