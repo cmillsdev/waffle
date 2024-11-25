@@ -82,7 +82,7 @@ class DebridCog(commands.Cog):
         description="Returns status of active torrents.",
         brief="Returns status of active torrents.",
     )
-    async def stat(self, ctx):
+    async def dl_status(self, ctx):
         allstatus = []
         with open("queue.txt", "r") as f:
             queue = f.readlines()
