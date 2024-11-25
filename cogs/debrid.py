@@ -62,6 +62,7 @@ class DebridCog(commands.Cog):
     async def mag(self, interaction: discord.Interaction, magnet: str):
         if magnet.startswith("magnet"):
             await interaction.response.defer(thinking=True)
+            print(magnet)
             mag = await self.alldebrid.upload_magnets(magnet)
             print(f"Adding magnet for {mag[1]}")
             if mag[2]:
