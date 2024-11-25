@@ -62,11 +62,11 @@ class DebridCog(commands.Cog):
     async def mag(self, interaction: discord.Interaction, magnet: str):
         if magnet.startswith("magnet"):
             await interaction.response.defer(thinking=True)
-            mag = self.alldebrid.upload_magnets(magnet)
-            print(f"Adding magnet for {mag[1]}")
-            if mag[2]:
-                embed = helpers.embed.download_ready(interaction.user, mag[1])
-                print(f"{mag[1]} is ready.")
+            mag = self.alldebrid.upload_magnets(magnet)['data']['magnets'][0]
+            print(f"Adding magnet for {mag['name']}")
+            if mag['ready']:
+                embed = helpers.embed.download_ready(interaction.user, mag['name'])
+                print(f"{mag['name']} is ready.")
                 dl_channel = await self.bot.fetch_channel(config.DL_CHANNEL)
                 await dl_channel.send(embed=embed)
                 await interaction.followup.send("Download ready and waiting!")
