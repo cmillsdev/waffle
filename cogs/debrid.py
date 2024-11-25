@@ -67,7 +67,7 @@ class DebridCog(commands.Cog):
             ready_list = {'ready':[]}
             if mag['ready']:
                 ready_list['ready'].append(mag['name'])
-                embed = helpers.embed.download_ready(interaction.user, mag['name'])
+                embed = helpers.embed.download_ready(interaction.user, ready_list)
                 print(f"{mag['name']} is ready.")
                 dl_channel = await self.bot.fetch_channel(config.DL_CHANNEL)
                 await dl_channel.send(embed=embed)
