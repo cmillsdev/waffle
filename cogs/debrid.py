@@ -64,7 +64,9 @@ class DebridCog(commands.Cog):
             await interaction.response.defer(thinking=True)
             mag = self.alldebrid.upload_magnets(magnet)['data']['magnets'][0]
             print(f"Adding magnet for {mag['name']}")
+            ready_list = {'ready':[]}
             if mag['ready']:
+                ready_list['ready'].append(mag['name'])
                 embed = helpers.embed.download_ready(interaction.user, mag['name'])
                 print(f"{mag['name']} is ready.")
                 dl_channel = await self.bot.fetch_channel(config.DL_CHANNEL)
