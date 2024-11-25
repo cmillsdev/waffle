@@ -78,7 +78,7 @@ class DebridCog(commands.Cog):
             await interaction.response.send_message("Not a valid magnet link.")
 
     @commands.command(
-        name="stat",
+        aliases=('stat', 'status'),
         description="Returns status of active torrents.",
         brief="Returns status of active torrents.",
     )

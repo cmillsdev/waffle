@@ -103,7 +103,7 @@ def debrid_status(all_status):
             name = m.get("filename", "")
             dlsize = float(m.get("size", 0))
             seeders = m.get("seeders", 0)
-            speed = m.get("downloadSpeed", 0)
+            speed = m.get("speed", 0)
             complete = float(m.get("downloaded", 0))
 
         sized_size = 0
