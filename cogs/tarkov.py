@@ -185,7 +185,7 @@ class TarkovCog(commands.Cog):
 
         # Create the embed
         embed = discord.Embed(
-            title=f"Tarkov Quest Comparison\n{self.tarkov_users[will]['tarkov_nick']}",
+            title="WILLS QUEST LOG",
             color=discord.Color.blue(),
         )
 
