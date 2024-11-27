@@ -160,6 +160,45 @@ class TarkovCog(commands.Cog):
         embed.add_field(name="Skills", value=skills_text)
 
         await ctx.reply(embed=embed)
+    @commands.command(name="twill", description="get wills tasks")
+    async def twill(self, ctx):
+        will = "67429c83000249e109c2a8fd"
+        wills_quests = get_user_profile(will)["characters"]["pmc"]["Quests"]
+        quests_info = load_json("strings/quests.json")
+        location_mapping = load_json("strings/locations.json")
+        quest_info_dict = extract_quest_info(quests_info, location_mapping)
+
+        filtered_qids = filter_quests_with_status_2(wills_quests)
+
+        quests_by_location = defaultdict(list)
+        for qid in filtered_qids:
+            quest_name = quest_info_dict.get(qid, {}).get("QuestName", qid)
+            location = quest_info_dict.get(qid, {}).get("Location", "???")
+            if quest_name == "Unknown Quest":
+                quest_name = qid  # Use qid if the quest name is unknown
+            quests_by_location[location].append(quest_name)
+
+        # Sort the locations and quests
+        sorted_locations = sorted(quests_by_location.items())
+        for location in quests_by_location:
+            quests_by_location[location].sort()
+
+        # Create the embed
+        embed = discord.Embed(
+            title=f"Tarkov Quest Comparison\n{self.tarkov_users[will]['tarkov_nick']}",
+            color=discord.Color.blue(),
+        )
+
+        # Add fields for each location
+        for location, quest_names in sorted_locations:
+            quest_list = "\n".join(quest_names)
+            embed.add_field(
+                name=f"__{location}__",
+                value=quest_list if quest_list else "No quests",
+                inline=False,
+            )
+
+        await ctx.reply(embed=embed)
 
     @commands.command(name="tcompare", description="compare quests")
     async def tcompare(self, ctx, *, user=None):
