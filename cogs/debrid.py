@@ -210,7 +210,9 @@ class DebridCog(commands.Cog):
                         api_response = self.alldebrid.upload_magnets(magnet_link)
                         download = api_response['data']['magnets'][0]
                         if download['ready']:
-                            ready_list["ready"].append(download['name'])
+                            magnet_status = self.alldebrid.get_magnet_status(magnet_id=download["id"])
+                            filename = magnet_status['data']['magnets']['filename']
+                            ready_list["ready"].append(filename)
                         else:
                             ready_list['not_ready'].append({"name":download['name'], "id":download['id']})
 
