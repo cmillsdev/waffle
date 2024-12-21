@@ -198,12 +198,12 @@ class DebridCog(commands.Cog):
                     return m.author == ctx.author and m.content.startswith(
                         ("!pick", "!Pick", "!search")
                     )
-                msg = await self.bot.wait_for("message", check=pick_check, timeout=60)
+                msg = await self.bot.wait_for("message", check=pick_check, timeout=120)
 
                 picks = yar.eval_pick(msg.content)
                 
                 if not picks:
-                    await search_message.edit(content=f"Search for `{query}` cancelled.\nIt was all porn, wasn't it", embeds=[])
+                    await ctx.reply(f"Search for `{query}` cancelled.")
                 else:
                     ready_list = {"ready":[], "not_ready": []}
                     for magnet_link in (magnets := yar.build_magnet_list(picks, results)):
@@ -232,7 +232,7 @@ class DebridCog(commands.Cog):
             except asyncio.TimeoutError:
                 # await ctx.send("TOO SLOW", mention_author=False)
                 # add reaction to previously sent em_result embed
-                await search_message.edit(content="You took too long <:negative:1301293100576014337>", embeds=[])
+                await ctx.reply("You took too long <:negative:1301293100576014337>")
                 # await ctx.send("something broke lol")
             except Exception as e:
                 self.console.print_exception(show_locals=True)
