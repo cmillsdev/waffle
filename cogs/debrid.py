@@ -215,7 +215,7 @@ class DebridCog(commands.Cog):
                             ready_list["ready"].append(filename)
                         else:
                             ready_list['not_ready'].append({"name":download['name'], "id":download['id']})
-                    print(ready_list)
+
                     status_embed = helpers.embed.status_embed(ready_list)
                     await search_message.edit(embed=status_embed)
 
