@@ -63,7 +63,7 @@ class MusicLeagueCog(commands.Cog):
 
     @commands.command(aliases=('fmds', 'fmdstandings', 'fmdstanding'), description='Get current standings')
     async def mlstandings(self, ctx):
-        r = await self.bot.httpx_request(MLSTANDINGS_URL, cookies=MLCOOKIES)
+        r = await self.bot.ml_httpx_request(MLSTANDINGS_URL)
         soup = bs(r.text, 'lxml')
         user_data = {}
 
