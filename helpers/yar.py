@@ -7,7 +7,7 @@ def filter_result(item, keys_to_remove, max_seeders=16777215):
     return {key: value for key, value in item.items() if key not in keys_to_remove}
 
 def search_magnets(q):
-    url = f"http://192.168.1.238:4000/api/search/{q}"
+    url = f"http://wafflefm:4000/api/search/{q}"
 
     with httpx.Client() as client:
         response = client.get(url, timeout=60)
