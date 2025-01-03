@@ -22,7 +22,6 @@ class MusicLeagueCog(commands.Cog):
         r = await self.bot.ml_httpx_request(MLROUNDS_URL)
         soup = bs(r.text, 'lxml')
         rounds = [d for d in soup.find_all('div', class_='card')]
-        print(rounds, len(rounds))
         section = rounds[1]
         title = [section.find('span', class_='card-text text-body-tertiary').get_text(strip=True), 
         section.find('h5', class_='card-title').get_text(strip=True)]
