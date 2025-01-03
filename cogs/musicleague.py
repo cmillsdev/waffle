@@ -21,52 +21,45 @@ class MusicLeagueCog(commands.Cog):
         }
         r = await self.bot.ml_httpx_request(MLROUNDS_URL)
         soup = bs(r.text, 'lxml')
-        try:
-            rounds = [d for d in soup.find_all('div', class_='card')]
-            print(rounds, len(rounds))
-            section = rounds[1]
-            title = [section.find('span', class_='card-text text-body-tertiary').get_text(strip=True), 
-            section.find('h5', class_='card-title').get_text(strip=True)]
+        rounds = [d for d in soup.find_all('div', class_='card')]
+        print(rounds, len(rounds))
+        section = rounds[1]
+        title = [section.find('span', class_='card-text text-body-tertiary').get_text(strip=True), 
+        section.find('h5', class_='card-title').get_text(strip=True)]
+    
+
+        linkify_element = section.find('p', class_='card-text')
+
+        if linkify_element:
+            x_html_value = linkify_element.get('x-html', '')
+
+            match = re.search(r"linkifyStr\('([^']+)'", x_html_value)
+            title.append(match.group(1))
         
+        url_section = section.find('div', class_='mt-3')['hx-get']
+        url = (MLBASE_URL + url_section)
+        r = await self.bot.httpx_request(url, cookies=MLCOOKIES)
 
-            linkify_element = section.find('p', class_='card-text')
+        sub_soup = bs(r.text, 'lxml')
+        
+        semibold_spans = sub_soup.find_all('span', class_='fw-semibold')
+        sub_status_dic = {"round": title[0], "title": title[1],"description": title[2], "voted": [], "waiting": []}
+        
+        if len(semibold_spans) >= 2:
+            done_section = semibold_spans[0].find_next_sibling('div')
+            for user_div in done_section.find_all('div', class_='col-auto'):
+                user_title = user_div.find('a')['title']
+                sub_status_dic["voted"].append(user_title)
 
-            if linkify_element:
-                x_html_value = linkify_element.get('x-html', '')
+            waiting_section = semibold_spans[1].find_next_sibling('div')
+            for user_div in waiting_section.find_all('div', class_='col-auto'):
+                user_title = user_div.find('a')['title']
+                sub_status_dic["waiting"].append(user_title)
 
-                match = re.search(r"linkifyStr\('([^']+)'", x_html_value)
-                title.append(match.group(1))
-            
-            url_section = section.find('div', class_='mt-3')['hx-get']
-            url = (MLBASE_URL + url_section)
-            r = await self.bot.httpx_request(url, cookies=MLCOOKIES)
-
-            sub_soup = bs(r.text, 'lxml')
-            
-            semibold_spans = sub_soup.find_all('span', class_='fw-semibold')
-            sub_status_dic = {"round": title[0], "title": title[1],"description": title[2], "voted": [], "waiting": []}
-            
-            if len(semibold_spans) >= 2:
-                done_section = semibold_spans[0].find_next_sibling('div')
-                for user_div in done_section.find_all('div', class_='col-auto'):
-                    user_title = user_div.find('a')['title']
-                    sub_status_dic["voted"].append(user_title)
-
-                waiting_section = semibold_spans[1].find_next_sibling('div')
-                for user_div in waiting_section.find_all('div', class_='col-auto'):
-                    user_title = user_div.find('a')['title']
-                    sub_status_dic["waiting"].append(user_title)
-
-            embed = Embed(title=f"{sub_status_dic['round']}: {sub_status_dic['title']}", description=sub_status_dic['description'])
-            embed.add_field(name=f'Waiting For:', value=', '.join(sub_status_dic['waiting']), inline=False)
-            embed.add_field(name=f'Done:', value=', '.join(sub_status_dic['voted']), inline=False)
-            await ctx.reply(embed=embed)
-        except Exception as e:
-            with open('fmd.html', 'w') as f:
-                f.write(r.text)
-            print(e)
-            await ctx.reply("ya shits broke, dumbass")
-
+        embed = Embed(title=f"{sub_status_dic['round']}: {sub_status_dic['title']}", description=sub_status_dic['description'])
+        embed.add_field(name=f'Waiting For:', value=', '.join(sub_status_dic['waiting']), inline=False)
+        embed.add_field(name=f'Done:', value=', '.join(sub_status_dic['voted']), inline=False)
+        await ctx.reply(embed=embed)
 
     @commands.command(aliases=('fmds', 'fmdstandings', 'fmdstanding'), description='Get current standings')
     async def mlstandings(self, ctx):
