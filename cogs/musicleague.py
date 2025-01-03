@@ -15,16 +15,12 @@ class MusicLeagueCog(commands.Cog):
         self.console = Console()
         self.music_league_check.start()
 
-    @tasks.loop(seconds=62)
-    async def music_league_check(self):
-        headers = {
-            "User-Agent": "Mozilla/5.0 (X11; Linux x86_64; rv:132.0) Gecko/20100101 Firefox/132.0"
-        }
-        pass
-
     @commands.command(name='fmd', description='get current round')
     async def mlround(self, ctx):
-        r = await self.bot.httpx_request(MLROUNDS_URL, cookies=MLCOOKIES)
+        headers = {
+            "User-Agent": "Mozilla/5.0 (X11; Linux x86_64; rv:133.0) Gecko/20100101 Firefox/133.0"
+        }
+        r = await self.bot.httpx_request(MLROUNDS_URL, cookies=MLCOOKIES, headers=headers)
         soup = bs(r.text, 'lxml')
         try:
             rounds = [d for d in soup.find_all('div', class_='card')]
