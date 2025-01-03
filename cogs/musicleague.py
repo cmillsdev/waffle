@@ -19,7 +19,7 @@ class MusicLeagueCog(commands.Cog):
         headers = {
             "User-Agent": "Mozilla/5.0 (X11; Linux x86_64; rv:133.0) Gecko/20100101 Firefox/133.0"
         }
-        r = await self.bot.httpx_request(MLROUNDS_URL, cookies=MLCOOKIES, headers=headers)
+        r = await self.bot.ml_httpx_request(MLROUNDS_URL)
         soup = bs(r.text, 'lxml')
         try:
             rounds = [d for d in soup.find_all('div', class_='card')]
