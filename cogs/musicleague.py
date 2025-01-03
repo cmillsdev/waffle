@@ -24,7 +24,7 @@ class MusicLeagueCog(commands.Cog):
         try:
             rounds = [d for d in soup.find_all('div', class_='card')]
             print(rounds, len(rounds))
-            section = rounds[0]
+            section = rounds[1]
             title = [section.find('span', class_='card-text text-body-tertiary').get_text(strip=True), 
             section.find('h5', class_='card-title').get_text(strip=True)]
         
@@ -61,9 +61,10 @@ class MusicLeagueCog(commands.Cog):
             embed.add_field(name=f'Waiting For:', value=', '.join(sub_status_dic['waiting']), inline=False)
             embed.add_field(name=f'Done:', value=', '.join(sub_status_dic['voted']), inline=False)
             await ctx.reply(embed=embed)
-        except:
+        except Exception as e:
             with open('fmd.html', 'w') as f:
                 f.write(r.text)
+            print(e)
             await ctx.reply("ya shits broke, dumbass")
 
 
