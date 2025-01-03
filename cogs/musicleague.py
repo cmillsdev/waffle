@@ -38,7 +38,7 @@ class MusicLeagueCog(commands.Cog):
         
         url_section = section.find('div', class_='mt-3')['hx-get']
         url = (MLBASE_URL + url_section)
-        r = await self.bot.httpx_request(url, cookies=MLCOOKIES)
+        r = await self.bot.ml_httpx_request(url)
 
         sub_soup = bs(r.text, 'lxml')
         
