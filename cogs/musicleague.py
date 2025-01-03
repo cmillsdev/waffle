@@ -26,11 +26,15 @@ class MusicLeagueCog(commands.Cog):
     async def mlround(self, ctx):
         r = await self.bot.httpx_request(MLROUNDS_URL, cookies=MLCOOKIES)
         soup = bs(r.text, 'lxml')
-        rounds = [d for d in soup.find_all('div', class_='card')]
-        print(rounds, len(rounds))
-        section = rounds[0]
-        title = [section.find('span', class_='card-text text-body-tertiary').get_text(strip=True), 
-        section.find('h5', class_='card-title').get_text(strip=True)]
+        try:
+            rounds = [d for d in soup.find_all('div', class_='card')]
+            print(rounds, len(rounds))
+            section = rounds[0]
+            title = [section.find('span', class_='card-text text-body-tertiary').get_text(strip=True), 
+            section.find('h5', class_='card-title').get_text(strip=True)]
+        except:
+            with open('fmd.html', 'w') as f:
+                f.write(r.text)
 
         linkify_element = section.find('p', class_='card-text')
 
