@@ -13,7 +13,6 @@ class MusicLeagueCog(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.console = Console()
-        self.music_league_check.start()
 
     @commands.command(name='fmd', description='get current round')
     async def mlround(self, ctx):
