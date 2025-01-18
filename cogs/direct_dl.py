@@ -34,8 +34,9 @@ class DirectDLCog(commands.Cog):
         try:
             ydl_opts = {
                 "outtmpl": "tiktok_video.%(ext)s",  # Save as tiktok_video.mp4
-                "format": "bestvideo+bestaudio/best",
+                "format": "best",
                 "final_ext": "mp4",
+                "format_sort": ["filesize:10M"]
             }
             loop = asyncio.get_event_loop()
             with yt_dlp.YoutubeDL(ydl_opts) as ydl:
@@ -116,8 +117,8 @@ class DirectDLCog(commands.Cog):
     async def on_message(self, message):
         tiktok_url_pattern = r"(https?://(?:www\.)?(?:vt\.)?tiktok\.com/[^\s]+)"
         instagram_reel_regex = r"https://(www\.)?instagram\.com/reel/\w+"
-        youtube_shorts_regex = r"https://(www\.)?youtube\.com/shorts/\w+"
-        combined_regex = f"({tiktok_url_pattern})|({instagram_reel_regex})|({youtube_shorts_regex})"
+       # youtube_shorts_regex = r"https://(www\.)?youtube\.com/shorts/\w+"
+        combined_regex = f"({tiktok_url_pattern})|({instagram_reel_regex})"
         match = re.search(combined_regex, message.content)
         if match:
             # Step 5: Use an async method to get the TikTok link
