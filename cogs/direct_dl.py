@@ -116,10 +116,10 @@ class DirectDLCog(commands.Cog):
     @commands.Cog.listener()
     async def on_message(self, message):
         tiktok_url_pattern = r"(https?://(?:www\.)?(?:vt\.)?tiktok\.com/[^\s]+)"
-        instagram_reel_regex = r"https://(www\.)?instagram\.com/reel/\w+"
-        youtube_shorts_regex = r"https://(www\.)?youtube\.com/shorts/\w+"
-        combined_regex = f"({tiktok_url_pattern})|({youtube_shorts_regex})|({instagram_reel_regex})"
-        match = re.search(combined_regex, message.content)
+        #instagram_reel_regex = r"https://(www\.)?instagram\.com/reel/\w+"
+        #youtube_shorts_regex = r"https://(www\.)?youtube\.com/shorts/\w+"
+        #combined_regex = f"({tiktok_url_pattern})|({youtube_shorts_regex})|({instagram_reel_regex})"
+        match = re.search(tiktok_url_pattern, message.content)
         if match:
             # Step 5: Use an async method to get the TikTok link
             link = match.group(0)
