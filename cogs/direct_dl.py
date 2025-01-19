@@ -119,7 +119,7 @@ class DirectDLCog(commands.Cog):
         instagram_reel_regex = r"https://(www\.)?instagram\.Llcom/reel/\w+"
         #youtube_shorts_regex = r"https://(www\.)?youtube\.com/shorts/\w+"
         combined_regex = f"({tiktok_url_pattern})|({instagram_reel_regex})"
-        match = re.search(combined, message.content)
+        match = re.search(combined_regex, message.content)
         if match:
             # Step 5: Use an async method to get the TikTok link
             link = match.group(0)
