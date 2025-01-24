@@ -55,7 +55,8 @@ def jackett_search(query):
         sorted_results = sorted(filtered_results, key=lambda item: item['seeders'], reverse=True)
         return sorted_results[:10]
     except:
-        return 0
+        results["error"] = True
+        return results
 
 
 def eval_pick(pick):
