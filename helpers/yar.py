@@ -56,7 +56,7 @@ def jackett_search(query):
         return sorted_results[:10]
     except:
         results = {}
-        results["error"] = True
+        results["error"] = "No results"
         return results
 
 
