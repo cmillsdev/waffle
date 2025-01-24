@@ -38,6 +38,7 @@ def sizeof_fmt(num, suffix="B"):
 
 def size(bytes_size):
     """Convert bytes to a human-readable format (e.g., KB, MB, GB)."""
+    bytes_size = int(bytes_size)
     for unit in ['B', 'KB', 'MB', 'GB', 'TB', 'PB']:
         if bytes_size < 1024:
             return f"{bytes_size:.2f} {unit}"
