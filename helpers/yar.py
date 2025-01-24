@@ -49,7 +49,7 @@ def jackett_search(query):
                     seeders = value["@value"]
                 if value["@name"] == "peers":
                     peers = value["@value"]
-            item = {"name": torrent['title'], "magnet_url": torrent['guid'], "size": torrent["size_in_bytes"], "source": torrent["jackettindexer"]["#text"], "seeders": seeders, "peers": peers}
+            item = {"name": torrent['title'], "magnet_url": torrent['guid'], "size_in_bytes": torrent["size"], "source": torrent["jackettindexer"]["#text"], "seeders": seeders, "peers": peers}
             results.append(item)
 
     sorted_results = sorted(filtered_results, key=lambda item: item['seeders'], reverse=True)
