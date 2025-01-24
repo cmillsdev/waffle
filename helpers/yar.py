@@ -39,7 +39,8 @@ def jackett_search(query):
     results = []
     for i in indexers:
         url = f"http://dietpi:9117/api/v2.0/indexers/{i}/results/torznab/api?apikey={JACKETT_KEY}&t=search&q="
-        response = requests.get(url)
+        with httpx.Client() as client:
+            response = client.get(url, timeout=60)
 
         torrent_results = xmltodict.parse(response.text)['rss']['channel']['item']
         for torrent in torrent_results:
