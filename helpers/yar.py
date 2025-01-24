@@ -38,7 +38,7 @@ def jackett_search(query):
     # get results from both, combine, filter down to handful of keys, sort by seeders, slice down to 10
     filtered_results = []
     for i in indexers:
-        url = f"http://dietpi:9117/api/v2.0/indexers/{i}/results/torznab/api?apikey={JACKETT_KEY}&t=search&q="
+        url = f"http://dietpi:9117/api/v2.0/indexers/{i}/results/torznab/api?apikey={JACKETT_KEY}&t=search&q={query}"
         with httpx.Client() as client:
             response = client.get(url, timeout=60)
 
