@@ -6,6 +6,7 @@ from discord import app_commands
 from discord.ext import commands
 from rich import print
 from rich.console import Console
+from lxml import objectify
 import httpx
 from bs4 import BeautifulSoup as bs
 import config
@@ -247,6 +248,13 @@ class DebridCog(commands.Cog):
             self.console.print_exception(show_locals=True)
             await ctx.send(embed=error_embed)  # type: ignore
 
+    async def handle_torrent_file(self, torrent_url):
+        # xml handling
+        # encode query
+        # dietpi:9117/api/v2.0/indexers/all/results/torznab/api?apikey=jpz98lz3zfizwgs6vl11fkbcru4tpjbg&t=search&q=
+        # file = ['path']
+        # file_upload = bot.alldebrid.upload_file(file_paths=file)
+        pass
 
 async def setup(bot):
     await bot.add_cog(DebridCog(bot))

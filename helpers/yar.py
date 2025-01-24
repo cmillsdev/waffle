@@ -1,8 +1,9 @@
 import httpx
+import xmltodict
+from config import JACKETT_KEY
 
-def filter_result(item, keys_to_remove, max_seeders=16777215):
-    # Exclude items with 'seeders' set to max_seeders and remove unwanted keys
-    if item.get('seeders') == max_seeders:
+def filter_result(item, keys_to_remove):
+    if item.get('seeders') == 16777215:
         return None
     return {key: value for key, value in item.items() if key not in keys_to_remove}
 
@@ -14,18 +15,44 @@ def search_magnets(q):
 
     api_results = response.json()['data']
 
-    keys_to_remove = {'canonical_url', 'category', 'description', 'id', 'magnet_hash', 'published_at'}
+    # keys_to_remove = {'canonical_url', 'category', 'description', 'id', 'magnet_hash', 'published_at'}
 
     # Filter and transform each result, removing any with 'seeders' == 16777215
-    filtered_results = [
-        filtered_item for item in api_results 
-        if (filtered_item := filter_result(item, keys_to_remove)) is not None
-    ]
+    # filtered_results = [
+    #     filtered_item for item in api_results 
+    #     if (filtered_item := filter_result(item, keys_to_remove)) is not None
+    # ]
 
     # Sort the filtered results by 'seeders' in descending order
     sorted_results = sorted(filtered_results, key=lambda item: item['seeders'], reverse=True)
 
     return sorted_results[:10] # limited to ten results
+
+def jackett_search(query):
+    # internetarchive - separate
+    # nyaasi - separate
+    indexers = ['bitsearch', 'torrentgalaxy']
+    query = query.replace(' ', '+')
+    # replace(' ', '+')
+    # rss.channel.item
+    # get results from both, combine, filter down to handful of keys, sort by seeders, slice down to 10
+    results = []
+    for i in indexers:
+        url = f"http://dietpi:9117/api/v2.0/indexers/{i}/results/torznab/api?apikey={JACKETT_KEY}&t=search&q="
+        response = requests.get(url)
+
+        torrent_results = xmltodict.parse(response.text)['rss']['channel']['item']
+        for torrent in torrent_results:
+            for value in torrent["torznab:attr"]:
+                if value["@name"] == "seeders":
+                    seeders = value["@value"]
+                if value["@name"] == "peers":
+                    peers = value["@value"]
+            item = {"name": torrent['title'], "magnet_url": torrent['guid'], "size": torrent["size_in_bytes"], "source": torrent["jackettindexer"]["#text"], "seeders": seeders, "peers": peers}
+            results.append(item)
+
+    sorted_results = sorted(filtered_results, key=lambda item: item['seeders'], reverse=True)
+    return sorted_results[:10]
 
 
 def eval_pick(pick):
