@@ -68,7 +68,7 @@ class DirectDLCog(commands.Cog):
                 "-vf",
                 "scale=-2:720",  # Rescale to max height of 720 while keeping aspect ratio
                 "-b:v",
-                "1M",  # Set video bitrate to 1Mbps for compression
+                "5M",  # Set video bitrate to 1Mbps for compression
                 "-c:a",
                 "libvorbis",
                 "-b:a",
@@ -76,7 +76,9 @@ class DirectDLCog(commands.Cog):
                 "-maxrate",
                 "1M",  # Limit max bitrate
                 "-bufsize",
-                "2M",  # Buffer size
+                "2M",
+                "-profile:v",
+                "high",  # Buffer size
                 output_file,
             ]
 
