@@ -64,7 +64,7 @@ class DirectDLCog(commands.Cog):
                 "-i",
                 input_file,
                 "-c:v",
-                "libvpx",
+                "libx264",
                 "-vf",
                 "scale=-2:720",  # Rescale to max height of 720 while keeping aspect ratio
                 "-b:v",
@@ -87,7 +87,7 @@ class DirectDLCog(commands.Cog):
             compressed_file_size_mb = os.path.getsize(output_file) / (1024 * 1024)
             print(f"Compressed file size: {compressed_file_size_mb:.2f} MB")
 
-            if compressed_file_size_mb > 15:
+            if compressed_file_size_mb > 10:
                 raise Exception(
                     "Compression failed to reduce the file size under 15MB."
                 )
