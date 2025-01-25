@@ -128,7 +128,7 @@ class DirectDLCog(commands.Cog):
                 video_filename = await self.download_tiktok_video(link)
 
                 # Step 7: Compress the video to fit under Discord's limit
-                compressed_video_filename = "compressed_tiktok_video.webm"
+                compressed_video_filename = "compressed_tiktok_video.mp4"
                 compressed_video = await self.compress_video(
                     video_filename, compressed_video_filename
                 )
