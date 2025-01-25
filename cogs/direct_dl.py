@@ -56,7 +56,7 @@ class DirectDLCog(commands.Cog):
             file_size_mb = os.path.getsize(input_file) / (1024 * 1024)
             print(f"Original file size: {file_size_mb:.2f} MB")
 
-            if file_size_mb <= 15:
+            if file_size_mb <= 10:
                 return input_file
 
             ffmpeg_command = [
