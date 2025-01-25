@@ -44,7 +44,7 @@ class DirectDLCog(commands.Cog):
                 await loop.run_in_executor(None, ydl.download, [tiktok_url])
             video_filename = "tiktok_video.mp4"
             converted_video_filename = (
-                "tiktok_video.webm"  # Make sure the file is saved as mp4
+                "tiktok_video.mp4"  # Make sure the file is saved as mp4
             )
             return video_filename
         except Exception as e:
