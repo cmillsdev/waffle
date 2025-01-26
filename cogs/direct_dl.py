@@ -88,7 +88,7 @@ class DirectDLCog(commands.Cog):
                 # "-b:a",
                 # "128k",  # Set audio bitrate to 128kbps
                 "-profile:v",
-0                "high",
+                "high",
                 output_file,
             ]
 
