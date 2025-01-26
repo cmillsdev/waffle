@@ -151,7 +151,7 @@ class DirectDLCog(commands.Cog):
                 )
 
                 await message.delete()
-                await message.channel.send(f"<@{message.author.id}>\n{video_info['desc']}", file=file)
+                await message.channel.send(f"<@{message.author.id}>\n>>> {video_info['desc']}", file=file)
 
                 # Step 9: Clean up the local files asynchronously
                 # there should be no mp4/webm in the folder
