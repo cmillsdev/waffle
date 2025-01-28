@@ -66,17 +66,17 @@ class DirectDLCog(commands.Cog):
                 "-c:v",
                 "libx264",
                 "-vf",
-                "scale=-2:720",
+                "scale=640:-1",
                 "-crf",
-                "26",
+                "28",
                 # "-b:v",
                 # "5M", 
                 "-c:a",
-                "libvorbis",
-                # "-b:a",
-                # "128k",  # Set audio bitrate to 128kbps
-                "-profile:v",
-                "high",
+                "aac",
+                "-b:a",
+                "96k",  # Set audio bitrate to 128kbps
+                "-preset",
+                "fast",
                 output_file,
             ]
 
