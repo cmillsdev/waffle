@@ -28,25 +28,37 @@ class DirectDLCog(commands.Cog):
             print("Connected to flask socket")
         except socketio.exceptions.ConnectionError as e:
             print(f"Connection to socket failed: {e}")
-
-    # Step 1: Make the download function async-compatible
     async def download_tiktok_video(self, tiktok_url):
         try:
             ydl_opts = {
-                "outtmpl": "tiktok_video.%(ext)s",  # Save as tiktok_video.mp4
+                "outtmpl": "tiktok_video.%(ext)s",  # Dynamic filename
                 "format": "best",
                 "final_ext": "mp4",
                 "format_sort": ["filesize:10M"]
+                #"quiet": True,  # Suppress yt-dlp output
             }
+
             loop = asyncio.get_event_loop()
+    # Step 1: Make the download function async-compatible
             with yt_dlp.YoutubeDL(ydl_opts) as ydl:
-                # Use asyncio to avoid blocking
+            # Extract video info (metadata)
+                info_dict = await loop.run_in_executor(None, ydl.extract_info, tiktok_url, False)
+            
+            # Save the video description to a variable
+                video_description = info_dict.get('description', None)
+            
+            # Download the video
                 await loop.run_in_executor(None, ydl.download, [tiktok_url])
-            video_filename = "tiktok_video.mp4"
-            converted_video_filename = (
-                "tiktok_video.mp4"  # Make sure the file is saved as mp4
-            )
-            return video_filename
+
+            # Get the filename from the info_dict
+                video_filename = ydl.prepare_filename(info_dict)
+
+            # Return video info
+                video_info = {
+                    "filename": video_filename,
+                    "desc": video_description,
+                }
+            return video_info
         except Exception as e:
             raise Exception(f"Error downloading TikTok video: {str(e)}")
 
@@ -125,12 +137,12 @@ class DirectDLCog(commands.Cog):
             link = match.group(0)
             try:
                 # Step 6: Download the TikTok video asynchronously
-                video_filename = await self.download_tiktok_video(link)
+                video_info = await self.download_tiktok_video(link)
 
                 # Step 7: Compress the video to fit under Discord's limit
                 compressed_video_filename = "compressed_tiktok_video.mp4"
                 compressed_video = await self.compress_video(
-                    video_filename, compressed_video_filename
+                    video_info["filename"], compressed_video_filename
                 )
 
                 # Step 8: Prepare the video for Discord upload
@@ -139,7 +151,7 @@ class DirectDLCog(commands.Cog):
                 )
 
                 await message.delete()
-                await message.channel.send(f"<@{message.author.id}>\n", file=file)
+                await message.channel.send(f"<@{message.author.id}>\n>>> {video_info['desc']}", file=file)
 
                 # Step 9: Clean up the local files asynchronously
                 # there should be no mp4/webm in the folder
