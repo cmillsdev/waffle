@@ -141,13 +141,13 @@ class DirectDLCog(commands.Cog):
 
                 # Step 7: Compress the video to fit under Discord's limit
                 compressed_video_filename = "compressed_tiktok_video.mp4"
-                compressed_video = await self.compress_video(
-                    video_info["filename"], compressed_video_filename
-                )
+                #compressed_video = await self.compress_video(
+                #    video_info["filename"], compressed_video_filename
+                #)
 
                 # Step 8: Prepare the video for Discord upload
                 file = discord.File(
-                    compressed_video, filename=os.path.basename(compressed_video)
+                    compressed_video, filename=os.path.basename("tiktok_video.mp4")
                 )
 
                 await message.delete()
