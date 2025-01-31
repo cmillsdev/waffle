@@ -159,7 +159,9 @@ class DirectDLCog(commands.Cog):
                 await self.remove_video_files()
 
             except Exception as e:
+                await self.remove_video_files()
                 print(f"Error processing TikTok video: {str(e)}")
+        await self.remove_video_files()
 
     async def update_message(self, message, done=False):
         current_time = time.time()
