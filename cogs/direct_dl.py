@@ -150,9 +150,10 @@ class DirectDLCog(commands.Cog):
                     compressed_video_filename, filename=os.path.basename("tiktok_video.mp4")
                 )
 
-                await message.delete()
-                await message.channel.send(f"<@{message.author.id}>\n>>> {video_info['desc']}", file=file)
-
+                
+                new_message = await message.channel.send(f"<@{message.author.id}>\n>>> {video_info['desc']}", file=file)
+                if new_message:
+                    await message.delete()
                 # Step 9: Clean up the local files asynchronously
                 # there should be no mp4/webm in the folder
                 await self.remove_video_files()
