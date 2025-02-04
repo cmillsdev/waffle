@@ -4,14 +4,41 @@ import httpx
 import helpers.embed
 import config
 import json
+import datetime
 from rich.console import Console
+
+utc = datetime.timezone.utc
+
+# If no tzinfo is given then UTC is assumed.
+times = [
+    datetime.time(hour=16, tzinfo=utc)
+]
 
 class TasksCog(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.alldebrid = bot.debrid
         self.debrid_check.start()
+        self.trump_countdown.start()
         self.console = Console()
+
+    @tasks.loop(time=times)
+    async def trump_countdown(self):
+        politics_channel = await self.bot.fetch_channel(1263616237603393556)
+        trump_out_of_office = 1863590400
+        now = datetime.datetime.now()
+
+        # Convert the Unix timestamp to a datetime object
+        end_of_suffering = datetime.datetime.fromtimestamp(trump_out_of_office)
+
+        # Calculate the difference between now and the timestamp
+        time_left = now - end_of_suffering
+
+        days = time_difference.days
+        hours, remainder = divmod(time_difference.seconds, 3600)
+        minutes, seconds = divmod(remainder, 60)
+
+        await politics_channel.send(f"Time left until Dipshit-in-charge fucks off:\n {days} days, {hours} hours, {minutes} minutes, {seconds} seconds")
 
     @tasks.loop(seconds=30)
     async def debrid_check(self):
