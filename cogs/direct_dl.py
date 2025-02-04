@@ -140,25 +140,28 @@ class DirectDLCog(commands.Cog):
                 video_info = await self.download_tiktok_video(link)
 
                 # Step 7: Compress the video to fit under Discord's limit
-                compressed_video_filename = "compressed_tiktok_video.mp4"
+                compressed_video_filename = "tiktok_video.mp4"
                 #compressed_video = await self.compress_video(
                 #    video_info["filename"], compressed_video_filename
                 #)
 
                 # Step 8: Prepare the video for Discord upload
                 file = discord.File(
-                    compressed_video, filename=os.path.basename("tiktok_video.mp4")
+                    compressed_video_filename, filename=os.path.basename("tiktok_video.mp4")
                 )
 
-                await message.delete()
-                await message.channel.send(f"<@{message.author.id}>\n>>> {video_info['desc']}", file=file)
-
+                
+                new_message = await message.channel.send(f"<@{message.author.id}>\n>>> {video_info['desc']}", file=file)
+                if new_message:
+                    await message.delete()
                 # Step 9: Clean up the local files asynchronously
                 # there should be no mp4/webm in the folder
                 await self.remove_video_files()
 
             except Exception as e:
+                await self.remove_video_files()
                 print(f"Error processing TikTok video: {str(e)}")
+        await self.remove_video_files()
 
     async def update_message(self, message, done=False):
         current_time = time.time()
