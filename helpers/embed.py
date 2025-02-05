@@ -156,8 +156,12 @@ def torrent_results(results):
         x = 0
         for torrent in results:
             result_value = f"Seeders: {torrent['seeders']} | Leechers: {torrent['leechers']} | Size: {size(torrent['size_in_bytes'])}"
+            if len(torrent['name']) > 255:
+                name = torrent['name'][:250] + '...'
+            else:
+                name = torrent['name']
             embed.add_field(
-                name=f"{x+1}. {torrent['name']}",
+                name=f"{x+1}. {name}",
                 value=result_value,
                 inline=False,
             )
