@@ -34,8 +34,8 @@ class TasksCog(commands.Cog):
         # Calculate the difference between now and the timestamp
         time_left = now - end_of_suffering
 
-        days = time_difference.days
-        hours, remainder = divmod(time_difference.seconds, 3600)
+        days = time_left.days
+        hours, remainder = divmod(time_left.seconds, 3600)
         minutes, seconds = divmod(remainder, 60)
 
         await politics_channel.send(f"Time left until Dipshit-in-charge fucks off:\n {days} days, {hours} hours, {minutes} minutes, {seconds} seconds")
