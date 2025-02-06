@@ -28,7 +28,7 @@ class MusicLeagueCog(commands.Cog):
             title = [section.find('span', class_='card-text text-body-tertiary').get_text(strip=True), 
             section.find('h5', class_='card-title').get_text(strip=True)]
         except Exception as e:
-            await ctx.reply("oh god the cookie expired! everyone panic!\n", f"```python\n{e}\n```")
+            await ctx.reply(f"oh god the cookie expired! everyone panic!\n```python\n{e}\n```")
             return 0
 
         linkify_element = section.find('p', class_='card-text')
