@@ -29,7 +29,7 @@ class MusicLeagueCog(commands.Cog):
             section.find('h5', class_='card-title').get_text(strip=True)]
         except:
             await ctx.reply("oh god the cookie expired! everyone panic!")
-    
+            return 0
 
         linkify_element = section.find('p', class_='card-text')
 
