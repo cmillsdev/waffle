@@ -44,7 +44,7 @@ def jackett_search(query):
                 response = client.get(url, timeout=60)
             torrent_results = xmltodict.parse(response.text) #['rss']['channel']['item']
             if not torrent_results.get('error'):
-                for torrent in torrent_results:
+                for torrent in torrent_results['rss']['channel']['item']:
                     for value in torrent["torznab:attr"]:
                         if value["@name"] == "seeders":
                             seeders = value["@value"]
