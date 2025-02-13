@@ -54,7 +54,8 @@ def jackett_search(query):
 
         sorted_results = sorted(filtered_results, key=lambda item: item['seeders'], reverse=True)
         return sorted_results[:10]
-    except:
+    except Exception as e:
+        print(e.with_traceback)
         results = {}
         results["error"] = "No results"
         return results
