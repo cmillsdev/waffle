@@ -31,7 +31,7 @@ def search_magnets(q):
 def jackett_search(query):
     # internetarchive - separate
     # nyaasi - separate
-    indexers = ['bitsearch', 'torrentgalaxy']
+    indexers = ['bitsearch', 'torrentgalaxy', 'nyaasi']
     query = query.replace(' ', '+')
     # replace(' ', '+')
     # rss.channel.item
@@ -42,19 +42,21 @@ def jackett_search(query):
             url = f"http://dietpi:9117/api/v2.0/indexers/{i}/results/torznab/api?apikey={JACKETT_KEY}&t=search&q={query}"
             with httpx.Client() as client:
                 response = client.get(url, timeout=60)
-            torrent_results = xmltodict.parse(response.text)['rss']['channel']['item']
-            for torrent in torrent_results:
-                for value in torrent["torznab:attr"]:
-                    if value["@name"] == "seeders":
-                        seeders = value["@value"]
-                    if value["@name"] == "peers":
-                        peers = value["@value"]
-                item = {"name": torrent['title'], "magnet_url": torrent['guid'], "size_in_bytes": torrent["size"], "source": torrent["jackettindexer"]["#text"], "seeders": int(seeders), "leechers": peers}
-                filtered_results.append(item)
+            torrent_results = xmltodict.parse(response.text) #['rss']['channel']['item']
+            if not torrent_results.get('error'):
+                for torrent in torrent_results['rss']['channel']['item']:
+                    for value in torrent["torznab:attr"]:
+                        if value["@name"] == "seeders":
+                            seeders = value["@value"]
+                        if value["@name"] == "peers":
+                            peers = value["@value"]
+                    item = {"name": torrent['title'], "magnet_url": torrent['guid'], "size_in_bytes": torrent["size"], "source": torrent["jackettindexer"]["#text"], "seeders": int(seeders), "leechers": peers}
+                    filtered_results.append(item)
 
         sorted_results = sorted(filtered_results, key=lambda item: item['seeders'], reverse=True)
         return sorted_results[:10]
-    except:
+    except Exception as e:
+        print(e)
         results = {}
         results["error"] = "No results"
         return results

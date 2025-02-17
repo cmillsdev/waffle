@@ -35,10 +35,7 @@ class TasksCog(commands.Cog):
         time_left = now - end_of_suffering
 
         days = time_left.days
-        hours, remainder = divmod(time_left.seconds, 3600)
-        minutes, seconds = divmod(remainder, 60)
-
-        await politics_channel.send(f"Time left until Dipshit-in-charge fucks off:\n {days} days, {hours} hours, {minutes} minutes, {seconds} seconds")
+        await politics_channel.send(f"**{abs(days)}** days left until Dipshit-in-charge fucks off.")
 
     @tasks.loop(seconds=30)
     async def debrid_check(self):
