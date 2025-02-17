@@ -31,7 +31,7 @@ def search_magnets(q):
 def jackett_search(query):
     # internetarchive - separate
     # nyaasi - separate
-    indexers = ['bitsearch', 'torrentgalaxy', 'nyaasi']
+    indexers = ['bitsearch', 'nyaasi']
     query = query.replace(' ', '+')
     # replace(' ', '+')
     # rss.channel.item
