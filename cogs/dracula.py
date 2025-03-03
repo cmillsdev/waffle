@@ -19,8 +19,8 @@ class ButtCog(commands.Cog):
             
         return r.json()["phrase"][:2000]
      # Slash command to add a phrase with an ephemeral response
-    @app_commands.command(name="addjoke", description="Add a new phrase to the database")
-    async def add_joke(self, interaction: Interaction, phrase: str):
+    @app_commands.command(name="addphrase", description="Add a new phrase to the database")
+    async def add_phrase(self, interaction: Interaction, phrase: str):
         async with httpx.AsyncClient() as client:
             response = await client.post(
                 "http://127.0.0.1:42069/discord_add_phrase", json={"phrase": phrase}
